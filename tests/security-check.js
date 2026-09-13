@@ -6,7 +6,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const main = fs.readFileSync(path.join(root, 'src', 'main.js'), 'utf8');
 const preload = fs.readFileSync(path.join(root, 'src', 'preload.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'src', 'renderer', 'index.html'), 'utf8');
-assert.equal(pkg.build.asar.disableIntegrity, false);
+assert.equal(pkg.build.asar, true);
 assert.equal(pkg.build.electronFuses.enableEmbeddedAsarIntegrityValidation, true);
 assert.equal(pkg.build.electronFuses.onlyLoadAppFromAsar, true);
 assert.equal(pkg.build.electronFuses.runAsNode, false);
