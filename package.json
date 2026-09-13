@@ -47,25 +47,23 @@
       "artifactName": "ALFASTEC-Setup-${version}.${ext}",
       "icon": "build/icon.ico"
     },
-"nsis": {
-  "oneClick": false,
-  "allowToChangeInstallationDirectory": true,
-  "createDesktopShortcut": true,
-  "createStartMenuShortcut": true
-},
-"asar": {
-  "disableIntegrity": false
-},
-"electronFuses": {
-  "runAsNode": false,
-  "enableCookieEncryption": true,
-  "enableNodeOptionsEnvironmentVariable": false,
-  "enableNodeCliInspectArguments": false,
-  "enableEmbeddedAsarIntegrityValidation": true,
-  "onlyLoadAppFromAsar": true,
-  "grantFileProtocolExtraPrivileges": false,
-  "loadBrowserProcessSpecificV8Snapshot": false
-},
-"forceCodeSigning": false
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "asar": true,
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "grantFileProtocolExtraPrivileges": false,
+      "loadBrowserProcessSpecificV8Snapshot": false
+    },
+    "forceCodeSigning": false
   }
 }
