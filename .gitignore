@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+
+*.log
+*.zip
+*.rar
+
+.DS_Store
+Thumbs.db
+
+.env
+.env.*

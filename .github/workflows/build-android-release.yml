@@ -1,0 +1,92 @@
+name: Build ALFASTEC Android (Release APK)
+
+# Tahap 4 — build APK RELEASE (bukan debug), bukan cloud, hanya CI build pipeline.
+#
+# Dijalankan manual (workflow_dispatch) atau saat push tag "android-v*"
+# (mis. android-v1.0.0), supaya build release tidak nyampur dengan commit
+# harian ke branch utama.
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - 'android-v*'
+
+jobs:
+  build-release-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install platform & build-tools yang dipakai
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      # Proyek ini TIDAK menyertakan gradlew (wrapper binary) di repo —
+      # Gradle disediakan langsung oleh runner lewat action resmi di bawah.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Pastikan secret keystore release tersedia
+        working-directory: android
+        run: |
+          if [ -z "${{ secrets.ALFASTEC_KEYSTORE_BASE64 }}" ]; then
+            echo "::error::Secret ALFASTEC_KEYSTORE_BASE64 belum diisi. Build release TIDAK BISA jalan tanpa keystore signing yang persisten (APK release wajib ditandatangani, dan harus pakai key yang SAMA setiap kali supaya bisa di-update di HP tanpa uninstall)."
+            echo "::error::Lihat android/README-ANDROID.md bagian 'Menyiapkan keystore release' untuk cara membuatnya."
+            exit 1
+          fi
+
+      - name: Decode keystore dari secret
+        working-directory: android
+        run: |
+          echo "${{ secrets.ALFASTEC_KEYSTORE_BASE64 }}" | base64 -d > app/alfastec-release.keystore
+
+      - name: Build APK RELEASE (signed)
+        working-directory: android
+        env:
+          ALFASTEC_KEYSTORE_PATH: alfastec-release.keystore
+          ALFASTEC_KEYSTORE_PASSWORD: ${{ secrets.ALFASTEC_KEYSTORE_PASSWORD }}
+          ALFASTEC_KEY_ALIAS: ${{ secrets.ALFASTEC_KEY_ALIAS }}
+          ALFASTEC_KEY_PASSWORD: ${{ secrets.ALFASTEC_KEY_PASSWORD }}
+        run: gradle :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Hapus file keystore dari runner
+        if: always()
+        working-directory: android
+        run: rm -f app/alfastec-release.keystore
+
+      - name: Pastikan hasil build memang RELEASE dan sudah ditandatangani
+        run: |
+          APK=$(find android/app/build/outputs/apk/release -name "*.apk" | head -n1)
+          if [ -z "$APK" ]; then
+            echo "::error::Tidak ditemukan APK release di build/outputs/apk/release/"
+            exit 1
+          fi
+          echo "APK ditemukan: $APK"
+          case "$APK" in
+            *unsigned*) echo "::error::APK ini TIDAK ditandatangani (unsigned) — signing config tidak terpasang dengan benar."; exit 1 ;;
+          esac
+          echo "APK_PATH=$APK" >> "$GITHUB_ENV"
+
+      - name: Verifikasi tanda tangan APK
+        run: |
+          BUILD_TOOLS=$(dirname "$(command -v aapt || find "$ANDROID_HOME/build-tools" -name aapt | sort | tail -n1)")
+          "$BUILD_TOOLS/apksigner" verify --print-certs "$APK_PATH"
+
+      - name: Unggah APK sebagai artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ALFASTEC-android-release
+          path: ${{ env.APK_PATH }}
+          retention-days: 90

@@ -1,0 +1,58 @@
+name: Build ALFASTEC Desktop (Windows Installer)
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - 'desktop-v*'
+
+jobs:
+  build-windows-installer:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild better-sqlite3 untuk Electron
+        run: npx electron-rebuild -f -w better-sqlite3
+
+      - name: Jalankan test bawaan
+        run: |
+          npm test
+          npm run security-check
+
+      - name: Build installer (.exe)
+        env:
+          CSC_LINK: ${{ secrets.ALFASTEC_WIN_CERT_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.ALFASTEC_WIN_CERT_PASSWORD }}
+        run: npm run build
+
+      - name: Pastikan installer benar-benar dihasilkan
+        shell: bash
+        run: |
+          EXE=$(find dist -maxdepth 1 -iname "*.exe" | head -n1)
+
+          if [ -z "$EXE" ]; then
+            echo "::error::Tidak ditemukan file .exe di folder dist/ setelah build."
+            exit 1
+          fi
+
+          echo "Installer ditemukan: $EXE"
+          echo "EXE_PATH=$EXE" >> "$GITHUB_ENV"
+
+      - name: Unggah installer sebagai artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ALFASTEC-windows-installer
+          path: ${{ env.EXE_PATH }}
+          retention-days: 90

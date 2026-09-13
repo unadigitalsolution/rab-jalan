@@ -1,0 +1,69 @@
+{
+  "name": "alfastec-desktop",
+  "version": "1.0.0",
+  "description": "ALFASTEC Desktop - Una Digital Solution",
+  "main": "src/main.js",
+  "author": "Una Digital Solution",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "audit": "npm audit --audit-level=high",
+    "test": "node tests/smoke-test.js",
+    "reset-admin": "node tools/reset-admin.js",
+    "build": "electron-builder",
+    "security-check": "node tests/security-check.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.2.0",
+    "electron": "^43.4.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.unadigitalsolution.alfastec",
+    "productName": "ALFASTEC",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "verifyUpdateCodeSignature": true,
+      "signAndEditExecutable": true,
+      "artifactName": "ALFASTEC-Setup-${version}.${ext}",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "asar": true,
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "grantFileProtocolExtraPrivileges": false,
+      "loadBrowserProcessSpecificV8Snapshot": false
+    },
+    "forceCodeSigning": false
+  }
+}

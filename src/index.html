@@ -1,0 +1,1606 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none';"><title>ALFASTEC — Sistem Manajemen Proyek</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:#f5f7fb;color:#172033}.side{position:fixed;inset:0 auto 0 0;width:230px;background:#0f172a;color:#cbd5e1;padding:20px}.brand{color:#fff;font-size:21px;font-weight:bold;margin:8px 10px 28px}.logo{display:inline-grid;place-items:center;background:#2563eb;border-radius:9px;width:36px;height:36px;margin-right:8px}.nav button{display:block;width:100%;padding:12px;border:0;border-radius:8px;background:transparent;color:inherit;text-align:left;margin:3px 0;cursor:pointer}.nav button:hover,.nav .active{background:#1e293b;color:white}.main{margin-left:230px;padding:28px;max-width:1400px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}h1{margin:0;font-size:27px}.muted{color:#64748b}.card{background:white;border:1px solid #e5e7eb;border-radius:12px;padding:20px;box-shadow:0 6px 20px #0f172a0d;margin-bottom:18px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.value{font-size:25px;font-weight:bold;margin-top:7px}.btn{background:#2563eb;color:white;border:0;border-radius:8px;padding:11px 15px;font-weight:bold;cursor:pointer}.page{display:none}.page.active{display:block}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid #e5e7eb}.table th{background:#f8fafc;color:#64748b}.badge{padding:5px 9px;border-radius:15px;font-size:11px;font-weight:bold;background:#dbeafe;color:#1d4ed8}.steps{display:flex;gap:7px;margin-bottom:18px;overflow:auto}.step{background:#e9edf4;padding:8px 12px;border-radius:18px;white-space:nowrap;color:#64748b;font-weight:bold;font-size:12px}.step.on{background:#dbeafe;color:#1d4ed8}.form{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field label{font-weight:bold;font-size:13px}.field input,.field select{display:block;width:100%;padding:11px;margin-top:6px;border:1px solid #d7dce4;border-radius:8px}.full{grid-column:1/-1}.actions{text-align:right;margin-top:18px}.map{height:400px;border-radius:12px;background:#e7edf0;position:relative;overflow:hidden}.road{position:absolute;width:115%;height:45px;left:-5%;top:48%;background:#59636e;transform:rotate(-16deg);border-top:4px solid #d5dbe0;border-bottom:4px solid #d5dbe0}.route{position:absolute;width:68%;height:7px;left:17%;top:51%;background:#2563eb;transform:rotate(-16deg);border-radius:5px}.point{position:absolute;width:22px;height:22px;background:white;border:5px solid #2563eb;border-radius:50%}.p1{left:18%;top:55%}.p2{right:18%;top:32%}.label{position:absolute;background:white;padding:8px;border-radius:7px;box-shadow:0 3px 12px #0002;font-size:12px;font-weight:bold}.l1{left:14%;top:61%}.l2{right:13%;top:26%}.distance{position:absolute;right:18px;top:18px;background:white;padding:12px;border-radius:9px;box-shadow:0 3px 12px #0002}.distance strong{display:block;color:#2563eb;font-size:21px;margin-top:4px}.total{font-size:28px;font-weight:bold;color:#2563eb}.summary{display:grid;grid-template-columns:1fr 1fr;gap:12px}.summary>div{background:#f8fafc;padding:12px;border-radius:8px}
+@media(max-width:900px){.side{width:70px}.brand span,.nav span{display:none}.main{margin-left:70px}.cards{grid-template-columns:1fr 1fr}}@media(max-width:600px){.cards,.form,.summary{grid-template-columns:1fr}.main{padding:16px}}
+
+.employee-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:18px}.employee-list{max-height:520px;overflow:auto}
+.emp-card{border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:9px;cursor:pointer;background:#fff}
+.emp-card:hover,.emp-card.selected{border-color:#93c5fd;background:#eff6ff}.emp-name{font-weight:800}.emp-meta{font-size:12px;color:var(--muted);margin-top:4px}
+.emp-avatar{width:42px;height:42px;border-radius:10px;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800;float:left;margin-right:10px}
+.emp-head{min-height:45px}.employee-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.employee-form .full{grid-column:1/-1}
+
+.material-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}.material-list{max-height:560px;overflow:auto}.mat-card{border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:9px;cursor:pointer}.mat-card:hover,.mat-card.selected{border-color:#93c5fd;background:#eff6ff}.mat-name{font-weight:800}.mat-meta{font-size:12px;color:var(--muted);margin-top:4px}.material-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.material-form .full{grid-column:1/-1}.price{font-weight:800;color:var(--blue)}
+
+.ahsp-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}.ahsp-list{max-height:560px;overflow:auto}.ahsp-card{border:1px solid var(--line);border-radius:9px;padding:13px;margin-bottom:9px;cursor:pointer}.ahsp-card:hover,.ahsp-card.selected{border-color:#93c5fd;background:#eff6ff}.ahsp-name{font-weight:800}.ahsp-meta{font-size:12px;color:var(--muted);margin-top:5px}.component-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}.component-table th,.component-table td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.component-table th{background:#f8fafc;color:var(--muted)}.ahsp-total{font-size:23px;font-weight:800;color:var(--blue);text-align:right;margin-top:12px}
+
+.resource-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:18px}.resource-list{max-height:560px;overflow:auto}.resource-card{border:1px solid var(--line);border-radius:9px;padding:13px;margin-bottom:9px;cursor:pointer}.resource-card:hover,.resource-card.selected{border-color:#93c5fd;background:#eff6ff}.resource-name{font-weight:800}.resource-meta{font-size:12px;color:var(--muted);margin-top:5px}.resource-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.resource-form .full{grid-column:1/-1}.resource-price{font-weight:800;color:var(--blue)}
+
+.price-grid{display:grid;grid-template-columns:1.05fr 1.25fr;gap:18px}.price-list{max-height:560px;overflow:auto}.price-card{border:1px solid var(--line);border-radius:9px;padding:13px;margin-bottom:9px;cursor:pointer}.price-card:hover,.price-card.selected{border-color:#93c5fd;background:#eff6ff}.price-name{font-weight:800}.price-meta{font-size:12px;color:var(--muted);margin-top:5px}.price-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.price-form .full{grid-column:1/-1}.price-history{margin-top:15px}.source-pill{font-size:11px;padding:4px 8px;border-radius:12px;background:#f1f5f9;color:#475569}.price-current{font-size:22px;font-weight:800;color:var(--blue)}
+
+.boq-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.boq-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}.boq-form{display:grid;grid-template-columns:1.2fr .7fr .7fr .8fr;gap:12px;align-items:end}.boq-total{font-size:26px;font-weight:900;color:var(--blue)}.cost-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.cost-box{border:1px solid var(--line);border-radius:9px;padding:12px}.cost-box b{display:block;font-size:18px;margin-top:4px}.boq-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.qty-input{width:110px}
+
+.report-actions{display:flex;gap:10px;flex-wrap:wrap}.report-preview{background:white;border:1px solid var(--line);padding:28px;min-height:500px}.report-header{text-align:center;border-bottom:2px solid #0f172a;padding-bottom:12px;margin-bottom:18px}.report-header h1{margin:0;font-size:22px}.report-header p{margin:4px 0;color:#64748b}.report-table{width:100%;border-collapse:collapse;font-size:11px}.report-table th,.report-table td{border:1px solid #cbd5e1;padding:7px}.report-table th{background:#f1f5f9}.report-total{text-align:right;font-size:18px;font-weight:900;margin-top:14px}.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.report-note{font-size:11px;color:#64748b}
+
+/* ===== PAYROLL / PERCENTAGE / INVOICE ===== */
+.pay-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:18px}
+.pay-list,.invoice-list{max-height:540px;overflow:auto}
+.pay-card,.invoice-card{border:1px solid var(--line,#e5e7eb);border-radius:9px;padding:13px;margin-bottom:9px;cursor:pointer;background:#fff}
+.pay-card:hover,.pay-card.selected,.invoice-card:hover,.invoice-card.selected{border-color:#93c5fd;background:#eff6ff}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:9px;padding:14px}
+.kpi-box b{display:block;font-size:20px;margin-top:5px}
+.slip-preview{background:#fff;border:1px solid #cbd5e1;padding:28px;min-height:430px}
+.slip-head{text-align:center;border-bottom:2px solid #111827;padding-bottom:12px;margin-bottom:18px}
+.slip-table{width:100%;border-collapse:collapse}
+.slip-table td{padding:7px;border-bottom:1px solid #e5e7eb}
+.slip-total{font-size:20px;font-weight:900;text-align:right;margin-top:12px}
+.percent-result{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.percent-box{border:1px solid #e5e7eb;border-radius:10px;padding:16px;background:#f8fafc}
+.percent-box b{display:block;font-size:22px;margin-top:6px;color:#2563eb}
+.invoice-total{font-size:24px;font-weight:900;color:#2563eb;text-align:right}
+.receipt-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}
+.receipt-list{max-height:540px;overflow:auto}
+.receipt-card{border:1px solid var(--line,#e5e7eb);border-radius:9px;padding:13px;margin-bottom:9px;cursor:pointer;background:#fff}
+.receipt-card:hover,.receipt-card.selected{border-color:#93c5fd;background:#eff6ff}
+.receipt-preview{background:#fff;border:1px solid #cbd5e1;padding:34px;min-height:500px}
+.receipt-paper{max-width:760px;margin:auto;border:1px solid #111827;padding:34px;background:#fff}
+.receipt-head{text-align:center;border-bottom:2px solid #111827;padding-bottom:14px;margin-bottom:20px}
+.receipt-head h2{margin:0;font-size:24px;letter-spacing:1px}
+.receipt-head p{margin:5px 0;color:#475569}
+.receipt-amount{font-size:25px;font-weight:900;text-align:center;margin:20px 0;padding:15px;border:2px dashed #111827;border-radius:8px}
+.receipt-sign{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:45px;text-align:center}
+.receipt-sign .line{border-top:1px solid #111827;margin-top:55px;padding-top:7px}
+@media(max-width:900px){.receipt-grid{grid-template-columns:1fr}.receipt-sign{grid-template-columns:1fr}}
+
+@media(max-width:900px){.pay-grid{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr 1fr}.percent-result{grid-template-columns:1fr}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:1fr}}
+</style>
+<style id="alfastec-login-css">
+#alfastecLoginOverlay{position:fixed;inset:0;z-index:999999;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif}
+.alf-login-card{width:min(420px,calc(100% - 32px));background:#fff;border-radius:18px;padding:30px;box-shadow:0 25px 80px rgba(0,0,0,.35)}
+.alf-login-card h1{text-align:center;margin:0 0 8px}.alf-login-card .sub{text-align:center;color:#64748b;margin-bottom:24px}
+.alf-login-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0 14px}
+.alf-login-card button{width:100%;padding:12px;border:0;border-radius:8px;background:#2563eb;color:white;font-weight:700;cursor:pointer}
+.alf-login-error{color:#dc2626;font-size:13px;min-height:20px;margin-bottom:8px}
+#alfastecSupport{position:fixed;left:0;right:0;bottom:0;text-align:center;padding:8px;background:rgba(255,255,255,.96);border-top:1px solid #e2e8f0;font-size:12px;z-index:9999}
+#alfastecSupport a{color:#2563eb;font-weight:700;text-decoration:none;cursor:pointer}
+</style>
+<style id="alfastec-trial-css">#alfastecTrialOverlay{position:fixed;inset:0;z-index:1000000;background:linear-gradient(135deg,#020617,#0f172a);display:flex;align-items:center;justify-content:center;font-family:Arial}.alf-trial-card{width:min(500px,calc(100% - 32px));background:#fff;border-radius:20px;padding:30px;box-shadow:0 25px 90px rgba(0,0,0,.45)}.alf-trial-card h1{text-align:center;margin:0 0 8px}.alf-trial-sub{text-align:center;color:#64748b}.alf-trial-days{text-align:center;font-size:38px;font-weight:900;color:#2563eb;margin:18px}.alf-trial-lock{font-size:13px;color:#991b1b;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px;margin:14px 0}.alf-trial-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0 10px}.alf-trial-card button{width:100%;padding:12px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer;margin-top:8px}.alf-trial-error{color:#dc2626;min-height:20px;font-size:13px}</style></head><body>
+<div id="alfastecTrialOverlay"><div class="alf-trial-card"><h1 id="alfBrandH1Trial">ALFASTEC</h1><div class="alf-trial-sub" id="alfTrialTitle">Memeriksa status trial...</div><div id="alfTrialBody"></div></div></div><div id="alfastecLoginOverlay">
+  <div class="alf-login-card">
+    <h1 id="alfBrandH1Login">ALFASTEC</h1>
+    <div class="sub">Sistem Manajemen Proyek</div>
+    <div id="alfLoginError" class="alf-login-error"></div>
+    <div id="alfFirstAdmin" style="display:none">
+      <p><b>Pengaturan Awal</b></p>
+      <p class="sub" style="margin-bottom:12px">Buat akun administrator pertama. Password minimal 10 karakter.</p>
+      <input id="alfSetupUser" autocomplete="username" placeholder="Username administrator">
+      <input id="alfSetupPass" autocomplete="new-password" type="password" placeholder="Password minimal 10 karakter">
+      <input id="alfSetupPass2" autocomplete="new-password" type="password" placeholder="Ulangi password">
+      <input id="alfSetupSecQ" placeholder="Pertanyaan keamanan (mis. Nama guru favorit?)">
+      <input id="alfSetupSecA" placeholder="Jawaban keamanan">
+      <p class="sub" style="margin:4px 0 12px">Pertanyaan &amp; jawaban ini dipakai untuk reset password kalau lupa, karena aplikasi ini offline (tanpa email).</p>
+      <button onclick="alfCreateAdmin()">Buat Administrator</button>
+    </div>
+    <div id="alfLoginForm">
+      <input id="alfUser" autocomplete="username" placeholder="Username">
+      <input id="alfPass" autocomplete="current-password" type="password" placeholder="Password">
+      <button onclick="alfLogin()">Masuk</button>
+      <p class="sub" style="text-align:center;margin-top:10px"><a href="#" onclick="alfShowForgot();return false;">Lupa password?</a></p>
+    </div>
+    <div id="alfForgotForm" style="display:none">
+      <p><b>Lupa Password</b></p>
+      <input id="alfForgotUser" autocomplete="username" placeholder="Username">
+      <button onclick="alfForgotFindQuestion()">Cari Pertanyaan Keamanan</button>
+      <div id="alfForgotQuestionBox" style="display:none">
+        <p class="sub" id="alfForgotQuestionText" style="margin:10px 0"></p>
+        <input id="alfForgotAnswer" placeholder="Jawaban keamanan">
+        <input id="alfForgotNewPass" type="password" autocomplete="new-password" placeholder="Password baru minimal 10 karakter">
+        <input id="alfForgotNewPass2" type="password" autocomplete="new-password" placeholder="Ulangi password baru">
+        <button onclick="alfForgotReset()">Reset Password</button>
+      </div>
+      <p class="sub" style="text-align:center;margin-top:10px"><a href="#" onclick="alfShowLogin();return false;">Kembali ke halaman masuk</a></p>
+    </div>
+  </div>
+</div>
+
+<aside class="side"><div class="brand" id="alfBrandSidebar"><span class="logo" id="alfBrandSidebarLogo">A</span><span id="alfBrandSidebarName">ALFASTEC</span></div><nav class="nav">
+<button class="active" onclick="go('dashboard',this)">▦ <span>Dashboard</span></button><button onclick="go('projects',this)">▣ <span>Proyek</span></button><button onclick="go('employees',this)">♙ <span>Karyawan</span></button><button onclick="go('payroll',this)">💰 <span>Payroll & Slip Gaji</span></button><button onclick="go('percent',this)">％ <span>Kalkulator Persentase</span></button><button onclick="go('invoices',this)">▣ <span>Invoice</span></button><button onclick="go('receipts',this)">🧾 <span>Kwitansi Manual</span></button><button onclick="go('materials',this)">▥ <span>Material</span></button><button onclick="go('ahsp',this)">∑ <span>AHSP</span></button><button onclick="go('labor',this)">♟ <span>Tenaga Kerja</span></button><button onclick="go('equipment',this)">⚙ <span>Alat</span></button><button onclick="go('prices',this)">▱ <span>Harga Satuan</span></button><button onclick="go('boq',this)">▤ <span>BOQ & RAB</span></button><button onclick="go('reports',this)">▤ <span>Laporan</span></button><button onclick="go('create',this)">＋ <span>Buat Proyek</span></button><button onclick="go('map',this)">⌖ <span>Peta Ruas</span></button><button onclick="go('road',this)">▤ <span>Data Jalan</span></button><button onclick="go('calc',this)">∑ <span>Perhitungan</span></button><button onclick="go('rab',this)">Rp <span>RAB</span></button><button onclick="go('summary',this)">▤ <span>Ringkasan</span></button>
+<button onclick="go('androidSync',this)">📱 <span>Sinkron Android</span></button>
+<button onclick="go('finalGate',this)">✓ <span>FINAL GATE</span></button></nav></aside>
+<main class="main"><div class="top"><div><h1 id="title">Dashboard</h1><p class="muted" id="sub">Kelola proyek jalan, perhitungan volume, dan RAB.</p></div><button class="btn" onclick="go('create')">+ Buat Proyek</button></div>
+<section id="dashboard" class="page active"><div class="cards"><div class="card"><span class="muted">Total Proyek</span><div class="value" id="dashProjects">0</div></div><div class="card"><span class="muted">Proyek Berjalan</span><div class="value" id="dashRunning">0</div></div><div class="card"><span class="muted">Proyek Selesai</span><div class="value" id="dashDone">0</div></div><div class="card"><span class="muted">Total Estimasi RAB</span><div class="value" id="dashValue">Rp 0</div></div></div><div class="card"><h2>Daftar Proyek</h2><table class="table"><thead><tr><th>Nama Proyek</th><th>Lokasi</th><th>Status</th><th>Estimasi RAB</th></tr></thead><tbody id="dashboardProjectTable"></tbody></table></div></section>
+
+<section id="employees" class="page">
+<div class="card">
+  <div class="head">
+    <div><h2>Data Karyawan</h2><div class="muted">Kelola personel yang dapat ditugaskan ke proyek ALFASTEC.</div></div>
+    <button class="btn" onclick="newEmployee()">+ Karyawan Baru</button>
+  </div>
+  <div class="employee-grid">
+    <div class="employee-list" id="employeeList"></div>
+    <div class="card" style="margin:0">
+      <h3 id="employeeFormTitle">Tambah Karyawan</h3>
+      <div class="employee-form">
+        <div class="field"><label>ID / NIK Karyawan<input id="empId"></label></div>
+        <div class="field"><label>Nama Lengkap<input id="empName"></label></div>
+        <div class="field"><label>Jabatan<select id="empPosition">
+          <option>Administrator</option><option>Project Manager</option><option>Site Engineer</option>
+          <option>Surveyor</option><option>Estimator</option><option>Drafter</option>
+          <option>Pelaksana</option><option>Operator</option>
+        </select></label></div>
+        <div class="field"><label>Divisi / Bagian<input id="empDivision"></label></div>
+        <div class="field"><label>Nomor HP<input id="empPhone"></label></div>
+        <div class="field"><label>Email<input id="empEmail" type="email"></label></div>
+        <div class="field"><label>Status<select id="empStatus"><option>Aktif</option><option>Nonaktif</option></select></label></div>
+        <div class="field"><label>Tanggal Bergabung<input id="empJoin" type="date"></label></div>
+        <div class="field full"><label>Keahlian<input id="empSkill" placeholder="Contoh: Survey, Estimasi, Pengawasan"></label></div>
+        <div class="field full"><label>Keterangan<input id="empNote"></label></div>
+      </div>
+      <div class="actions">
+        <button class="btn danger" onclick="deleteEmployee()">Hapus</button>
+        <button class="btn secondary" onclick="newEmployee()">Batal</button>
+        <button class="btn" onclick="saveEmployee()">Simpan Karyawan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card section">
+  <div class="head"><h2>Tim Proyek Aktif</h2><span class="badge blue" id="teamCount">0 orang</span></div>
+  <table class="table"><thead><tr><th>Nama</th><th>Jabatan</th><th>Divisi</th><th>Status</th></tr></thead>
+  <tbody id="teamTable"></tbody></table>
+</div>
+</section>
+
+
+<section id="materials" class="page">
+<div class="card">
+ <div class="head">
+  <div><h2>Material & Bahan</h2><div class="muted">Master material, satuan, harga, dan kebutuhan proyek.</div></div>
+  <button class="btn" onclick="newMaterial()">+ Material Baru</button>
+ </div>
+ <div class="notice"><b>V9 aktif:</b> master material, stok masuk/keluar, stok minimum, kebutuhan material berdasarkan koefisien pekerjaan, dan estimasi biaya material. Data tersimpan otomatis ke database aplikasi dan dipulihkan saat aplikasi dibuka.</div>
+ <div class="material-grid">
+  <div class="material-list" id="materialList"></div>
+  <div class="card" style="margin:0">
+   <h3 id="materialFormTitle">Tambah Material</h3>
+   <div class="material-form">
+    <div class="field"><label>Kode Material<input id="matCode"></label></div>
+    <div class="field"><label>Nama Material<input id="matName"></label></div>
+    <div class="field"><label>Kategori<select id="matCategory"><option>Semen</option><option>Agregat</option><option>Pasir</option><option>Batu</option><option>Besi</option><option>Aspal</option><option>Lainnya</option></select></label></div>
+    <div class="field"><label>Satuan<select id="matUnit"><option>kg</option><option>zak</option><option>m³</option><option>ton</option><option>liter</option><option>batang</option><option>buah</option></select></label></div>
+    <div class="field"><label>Harga Satuan<input id="matPrice" type="number" min="0"></label></div>
+    <div class="field"><label>Stok<input id="matStock" type="number" min="0" step=".01"></label></div><div class="field"><label>Stok Minimum<input id="mMin" type="number" min="0" step=".01" value="0"></label></div>
+    <div class="field full"><label>Supplier<input id="matSupplier"></label></div>
+    <div class="field full"><label>Keterangan<input id="matNote"></label></div>
+   </div>
+   <div class="actions">
+    <button class="btn danger" onclick="deleteMaterial()">Hapus</button>
+    <button class="btn secondary" onclick="newMaterial()">Batal</button>
+    <button class="btn" onclick="saveMaterial()">Simpan Material</button>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="card section">
+ <div class="head"><h2>Transaksi Stok</h2><span class="badge blue" id="stockTxCount">0 transaksi</span></div>
+ <div class="boq-form">
+  <div class="field"><label>Material<select id="stockMaterial"></select></label></div>
+  <div class="field"><label>Jenis<select id="stockType"><option value="in">Material Masuk</option><option value="out">Material Keluar / Dipakai</option></select></label></div>
+  <div class="field"><label>Jumlah<input id="stockQty" type="number" min="0" step=".01" value="1"></label></div>
+  <div><button class="btn" onclick="addStockTransaction()">+ Simpan Transaksi</button></div>
+ </div>
+ <div style="margin-top:14px"><table class="table"><thead><tr><th>Tanggal</th><th>Material</th><th>Jenis</th><th>Jumlah</th><th></th></tr></thead><tbody id="stockTxTable"></tbody></table></div>
+</div>
+<div class="card section">
+ <div class="head"><h2>Stok Material</h2><span class="badge blue" id="materialCount">0 item</span></div>
+ <table class="table"><thead><tr><th>Kode</th><th>Material</th><th>Stok</th><th>Min.</th><th>Harga</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="stockTable"></tbody></table>
+</div>
+<div class="card section">
+ <div class="head"><h2>Koefisien Kebutuhan Material</h2><span class="badge blue">RAB → Material</span></div>
+ <div class="boq-form">
+  <div class="field"><label>Pekerjaan<select id="needWork"><option value="persiapan">Pekerjaan Persiapan</option><option value="agregat">Lapis Pondasi Agregat</option><option value="aspal">Pekerjaan Aspal</option><option value="beton">Beton</option></select></label></div>
+  <div class="field"><label>Volume Pekerjaan<input id="needVolume" type="number" min="0" step=".001" value="1"></label></div>
+  <div class="field"><label>Satuan<input id="needUnit" readonly value="ls"></label></div>
+  <div><button class="btn" onclick="calculateMaterialNeed()">Hitung Kebutuhan</button></div>
+ </div>
+ <div style="margin-top:14px"><table class="table"><thead><tr><th>Material</th><th>Koefisien</th><th>Kebutuhan</th><th>Satuan</th><th>Harga</th><th>Estimasi</th></tr></thead><tbody id="needTable"></tbody></table></div>
+ <div style="text-align:right;margin-top:15px"><span class="muted">TOTAL ESTIMASI MATERIAL</span><div class="total" id="materialTotal">Rp 0</div></div>
+</div>
+</section>
+
+<section id="ahsp" class="page">
+<div class="card">
+ <div class="head">
+  <div><h2>AHSP — Analisa Harga Satuan Pekerjaan</h2><div class="muted">Susun komponen bahan, tenaga, dan alat untuk setiap pekerjaan.</div></div>
+  <button class="btn" onclick="newAHSP()">+ Analisa Baru</button>
+ </div>
+ <div class="notice">AHSP menggunakan komponen yang Anda masukkan; harga resmi harus disesuaikan dengan standar AHSP/SSH/HSPK yang berlaku. Nilai resmi harus disesuaikan dengan standar AHSP/SSH/HSPK yang berlaku pada daerah dan tahun proyek.</div>
+ <div class="ahsp-grid">
+  <div class="ahsp-list" id="ahspList"></div>
+  <div class="card" style="margin:0">
+   <h3 id="ahspFormTitle">Tambah Analisa Pekerjaan</h3>
+   <div class="form">
+    <div class="field"><label>Kode AHSP<input id="ahspCode"></label></div>
+    <div class="field"><label>Nama Pekerjaan<input id="ahspName"></label></div>
+    <div class="field"><label>Satuan Pekerjaan<select id="ahspUnit"><option>m³</option><option>m²</option><option>m</option><option>ton</option><option>kg</option><option>ls</option></select></label></div>
+    <div class="field"><label>Kategori<select id="ahspCategory"><option>Pekerjaan Tanah</option><option>Perkerasan</option><option>Beton</option><option>Aspal</option><option>Drainase</option><option>Lainnya</option></select></label></div><div class="field full"><label>Harga Satuan AHSP<input id="ahspPrice" type="number" min="0" step="1" placeholder="Contoh: 450000"></label></div>
+   </div>
+   <h4>Komponen Analisa</h4>
+   <div class="notice">Tambahkan bahan, tenaga, dan alat beserta koefisien kebutuhannya per satuan pekerjaan. Harga Satuan AHSP di atas otomatis dihitung dari total komponen ini, dan menjadi dasar rincian barang per proyek pada menu BOQ &amp; RAB.</div>
+   <div class="boq-form">
+    <div class="field"><label>Jenis<select id="ahspCompType" onchange="fillAhspCompOptions()"><option value="material">Bahan</option><option value="labor">Tenaga</option><option value="equipment">Alat</option></select></label></div>
+    <div class="field"><label>Komponen<select id="ahspCompItem"></select></label></div>
+    <div class="field"><label>Koefisien<input id="ahspCompCoef" type="number" min="0" step="0.0001" value="1"></label></div>
+    <div><button class="btn secondary" type="button" onclick="addAhspComponent()">+ Tambah Komponen</button></div>
+   </div>
+   <table class="component-table"><thead><tr><th>Jenis</th><th>Komponen</th><th>Koef.</th><th>Harga</th><th>Jumlah</th><th></th></tr></thead><tbody id="ahspComponents"></tbody></table>
+   <div class="ahsp-total" id="ahspUnitPrice">Rp 0 / satuan</div>
+   <div class="actions">
+    <button class="btn danger" onclick="deleteAHSP()">Hapus</button>
+    <button class="btn secondary" onclick="newAHSP()">Batal</button>
+    <button class="btn" onclick="saveAHSP()">Simpan Analisa</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="card section">
+ <div class="head"><h2>AHSP Terpilih untuk Proyek</h2><span class="badge blue" id="selectedAhspBadge">Belum dipilih</span></div>
+ <div class="notice">Pilih analisa di atas untuk melihat rincian bahan, tenaga, dan alat. Harga satuan pekerjaan dihitung dari total komponen.</div>
+ <div id="ahspProjectSummary" class="empty">Belum ada AHSP yang dipilih.</div>
+</div>
+</section>
+
+<section id="labor" class="page">
+<div class="card">
+ <div class="head"><div><h2>Tenaga Kerja</h2><div class="muted">Master tenaga kerja untuk komponen AHSP dan estimasi upah.</div></div><button class="btn" onclick="newLabor()">+ Tenaga Baru</button></div>
+ <div class="notice">Data tenaga kerja dapat dikaitkan ke AHSP. Masukkan upah sesuai standar atau harga yang berlaku.</div>
+ <div class="resource-grid">
+  <div class="resource-list" id="laborList"></div>
+  <div class="card" style="margin:0">
+   <h3 id="laborFormTitle">Tambah Tenaga Kerja</h3>
+   <div class="resource-form">
+    <div class="field"><label>Kode<input id="laborCode"></label></div>
+    <div class="field"><label>Nama/Jenis Tenaga<input id="laborName"></label></div>
+    <div class="field"><label>Kategori<select id="laborCategory"><option>Pekerja</option><option>Tukang</option><option>Mandor</option><option>Operator</option><option>Teknisi</option><option>Lainnya</option></select></label></div>
+    <div class="field"><label>Satuan Upah<select id="laborUnit"><option>OH</option><option>hari</option><option>jam</option></select></label></div>
+    <div class="field"><label>Upah Satuan<input id="laborPrice" type="number" min="0"></label></div>
+    <div class="field"><label>Status<select id="laborStatus"><option>Aktif</option><option>Nonaktif</option></select></label></div>
+    <div class="field full"><label>Keterangan<input id="laborNote"></label></div>
+   </div>
+   <div class="actions"><button class="btn danger" onclick="deleteLabor()">Hapus</button><button class="btn secondary" onclick="newLabor()">Batal</button><button class="btn" onclick="saveLabor()">Simpan</button></div>
+  </div>
+ </div>
+</div>
+<div class="card section"><div class="head"><h2>Daftar Upah</h2><span class="badge blue" id="laborCount">0 item</span></div>
+<table class="table"><thead><tr><th>Tenaga</th><th>Kategori</th><th>Satuan</th><th>Upah</th><th>Status</th></tr></thead><tbody id="laborTable"></tbody></table></div>
+</section>
+
+<section id="equipment" class="page">
+<div class="card">
+ <div class="head"><div><h2>Alat / Peralatan</h2><div class="muted">Master alat, tarif penggunaan, dan status ketersediaan.</div></div><button class="btn" onclick="newEquipment()">+ Alat Baru</button></div>
+ <div class="notice">Tarif alat dapat berupa biaya operasi/sewa per jam. Masukkan tarif sesuai kondisi lapangan dan standar proyek.</div>
+ <div class="resource-grid">
+  <div class="resource-list" id="equipmentList"></div>
+  <div class="card" style="margin:0">
+   <h3 id="equipmentFormTitle">Tambah Alat</h3>
+   <div class="resource-form">
+    <div class="field"><label>Kode Alat<input id="equipCode"></label></div>
+    <div class="field"><label>Nama Alat<input id="equipName"></label></div>
+    <div class="field"><label>Kategori<select id="equipCategory"><option>Alat Berat</option><option>Peralatan Beton</option><option>Peralatan Aspal</option><option>Angkutan</option><option>Peralatan Umum</option></select></label></div>
+    <div class="field"><label>Satuan Tarif<select id="equipUnit"><option>jam</option><option>hari</option><option>ls</option></select></label></div>
+    <div class="field"><label>Tarif Penggunaan<input id="equipPrice" type="number" min="0"></label></div>
+    <div class="field"><label>Status<select id="equipStatus"><option>Tersedia</option><option>Disewa</option><option>Servis</option><option>Tidak Aktif</option></select></label></div>
+    <div class="field full"><label>Keterangan<input id="equipNote"></label></div>
+   </div>
+   <div class="actions"><button class="btn danger" onclick="deleteEquipment()">Hapus</button><button class="btn secondary" onclick="newEquipment()">Batal</button><button class="btn" onclick="saveEquipment()">Simpan</button></div>
+  </div>
+ </div>
+</div>
+<div class="card section"><div class="head"><h2>Daftar Alat</h2><span class="badge blue" id="equipmentCount">0 item</span></div>
+<table class="table"><thead><tr><th>Alat</th><th>Kategori</th><th>Satuan</th><th>Tarif</th><th>Status</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
+</section>
+
+
+<section id="prices" class="page">
+<div class="card">
+ <div class="head"><div><h2>Harga Satuan</h2><div class="muted">Kelola harga bahan, tenaga, dan alat berdasarkan tahun serta lokasi proyek.</div></div><button class="btn" onclick="newPrice()">+ Harga Baru</button></div>
+ <div class="notice">Masukkan harga dari sumber yang berlaku untuk lokasi dan tahun proyek.</div>
+ <div class="price-grid">
+  <div class="price-list" id="priceList"></div>
+  <div class="card" style="margin:0">
+   <h3 id="priceFormTitle">Tambah Harga Satuan</h3>
+   <div class="price-form">
+    <div class="field"><label>Jenis<select id="priceType"><option>Bahan</option><option>Tenaga</option><option>Alat</option></select></label></div>
+    <div class="field"><label>Nama Komponen<input id="priceName"></label></div>
+    <div class="field"><label>Tahun<select id="priceYear"><option>2026</option><option>2027</option><option>2028</option><option>2029</option></select></label></div>
+    <div class="field"><label>Lokasi<input id="priceLocation" placeholder="Kabupaten/Kota"></label></div>
+    <div class="field"><label>Satuan<input id="priceUnit"></label></div>
+    <div class="field"><label>Harga Satuan<input id="priceValue" type="number" min="0"></label></div>
+    <div class="field"><label>Sumber Harga<input id="priceSource" placeholder="SSH / HSPK / survei pasar"></label></div>
+    <div class="field"><label>Tanggal Berlaku<input id="priceDate" type="date"></label></div>
+    <div class="field full"><label>Keterangan<input id="priceNote"></label></div>
+   </div>
+   <div class="actions"><button class="btn danger" onclick="deletePrice()">Hapus</button><button class="btn secondary" onclick="newPrice()">Batal</button><button class="btn" onclick="savePrice()">Simpan</button></div>
+  </div>
+ </div>
+</div>
+<div class="card section">
+ <div class="head"><h2>Riwayat Harga Terpilih</h2><span class="badge blue" id="priceHistoryCount">0 data</span></div>
+ <table class="table"><thead><tr><th>Tahun</th><th>Lokasi</th><th>Harga</th><th>Sumber</th><th>Berlaku</th></tr></thead><tbody id="priceHistoryTable"></tbody></table>
+</div>
+<div class="card section">
+ <div class="head"><h2>Harga Aktif untuk Proyek</h2><span class="badge green" id="activePriceInfo">Otomatis</span></div>
+ <div class="summary">
+  <div class="item"><span class="muted">Tahun Proyek</span><br><b id="activePriceYear"></b></div>
+  <div class="item"><span class="muted">Lokasi</span><br><b id="activePriceLocation"></b></div>
+  <div class="item"><span class="muted">Komponen dengan harga</span><br><b id="activePriceCount"></b></div>
+ </div>
+</div>
+</section>
+
+<section id="boq" class="page">
+<div class="card">
+ <div class="head"><div><h2>BOQ & RAB Otomatis</h2><div class="muted">Gabungkan volume pekerjaan dengan AHSP untuk membentuk daftar kuantitas dan RAB proyek.</div></div></div>
+ <div class="notice">Pilih AHSP, masukkan volume, lalu tambahkan ke BOQ. Harga satuan dihitung dari komponen Bahan + Tenaga + Alat berdasarkan harga aktif.</div>
+ <div class="boq-form">
+  <div class="field"><label>Proyek<select id="boqProject" onchange="renderBOQ()"><option value="">Pilih proyek</option></select></label></div>
+  <div class="field"><label>AHSP<select id="boqAhsp" onchange="fillBoqUnit()"></select></label></div>
+  <div class="field"><label>Volume<input id="boqQty" type="number" min="0" step=".001" value="1"></label></div>
+  <div class="field"><label>Satuan<input id="boqUnit" readonly></label></div>
+  <div><button class="btn" onclick="addBOQ()">+ Tambah Pekerjaan</button></div>
+ </div>
+</div>
+<div class="notice" style="margin-top:-8px" id="boqScopeNotice">Pilih proyek di atas untuk menampilkan BOQ, RAB, dan rincian barang khusus proyek tersebut. Kosongkan pilihan proyek untuk melihat rekap seluruh pekerjaan lintas proyek.</div>
+
+<div class="card section">
+ <div class="head"><h2>Bill of Quantity</h2><div class="boq-actions"><button class="btn secondary" onclick="recalculateBOQ()">↻ Hitung Ulang</button><button class="btn danger" onclick="clearBOQ()">Kosongkan</button></div></div>
+ <table class="table"><thead><tr><th>No</th><th>Kode</th><th>Uraian Pekerjaan</th><th>Volume</th><th>Sat</th><th>Harga Satuan</th><th>Jumlah</th><th></th></tr></thead><tbody id="boqTable"></tbody></table>
+</div>
+
+<div class="card section">
+ <div class="head"><h2>Rekapitulasi RAB</h2><span class="badge blue" id="boqItemCount">0 pekerjaan</span></div>
+ <div class="cost-breakdown">
+  <div class="cost-box"><span class="muted">Bahan</span><b id="rabMaterial">Rp 0</b></div>
+  <div class="cost-box"><span class="muted">Tenaga</span><b id="rabLabor">Rp 0</b></div>
+  <div class="cost-box"><span class="muted">Alat</span><b id="rabEquipment">Rp 0</b></div>
+ </div>
+ <div class="section" style="margin-top:16px">
+  <div class="head"><span class="muted">TOTAL RAB</span><span class="boq-total" id="rabGrandTotal">Rp 0</span></div>
+ </div>
+</div>
+
+<div class="card section">
+ <div class="head"><div><h2>Rincian Barang Kebutuhan Proyek</h2><div class="muted" id="boqComponentsScope">Pilih proyek untuk melihat rincian lengkap.</div></div><div class="boq-actions"><button class="btn secondary" onclick="exportMaterialNeedCSV()">⇩ Export CSV</button><button class="btn secondary" onclick="printMaterialNeed()">🖨 Cetak Rincian Barang</button></div></div>
+ <table class="table"><thead><tr><th>No</th><th>Jenis</th><th>Kode</th><th>Nama Barang</th><th>Kebutuhan</th><th>Satuan</th><th>Harga Satuan</th><th>Biaya</th></tr></thead><tbody id="boqComponentsTable"></tbody></table>
+</div>
+</section>
+
+
+
+<section id="payroll" class="page">
+  <div class="card">
+    <div class="head">
+      <div><h2>Payroll & Slip Gaji Karyawan</h2><div class="muted">Pembayaran gaji/upah karyawan dengan komponen pendapatan, potongan, dan slip gaji standar.</div></div>
+      <button class="btn" onclick="newPayroll()">+ Pembayaran Baru</button>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><span class="muted">Karyawan</span><b id="payEmpCount">0</b></div>
+      <div class="kpi-box"><span class="muted">Total Gaji</span><b id="payTotal">Rp 0</b></div>
+      <div class="kpi-box"><span class="muted">Potongan</span><b id="payDeduct">Rp 0</b></div>
+      <div class="kpi-box"><span class="muted">Gaji Bersih</span><b id="payNet">Rp 0</b></div>
+    </div>
+  </div>
+  <div class="pay-grid">
+    <div class="card">
+      <h3>Daftar Pembayaran</h3>
+      <div class="pay-list" id="payrollList"></div>
+    </div>
+    <div class="card">
+      <h3 id="payFormTitle">Pembayaran Gaji</h3>
+      <div class="form">
+        <div class="field"><label>Karyawan<select id="payEmployee"></select></label></div>
+        <div class="field"><label>Periode<input id="payPeriod" type="month"></label></div>
+        <div class="field"><label>Gaji Pokok<input id="payBasic" type="number" min="0" value="0"></label></div>
+        <div class="field"><label>Tunjangan<input id="payAllowance" type="number" min="0" value="0"></label></div>
+        <div class="field"><label>Bonus / Insentif<input id="payBonus" type="number" min="0" value="0"></label></div>
+        <div class="field"><label>Lembur<input id="payOvertime" type="number" min="0" value="0"></label></div>
+        <div class="field"><label>Potongan<input id="payDeduction" type="number" min="0" value="0"></label></div>
+        <div class="field"><label>Metode Pembayaran<select id="payMethod"><option>Transfer Bank</option><option>Tunai</option><option>E-Wallet</option></select></label></div>
+        <div class="field"><label>Status<select id="payStatus"><option>Dibayar</option><option>Belum Dibayar</option></select></label></div>
+        <div class="field"><label>Tanggal Bayar<input id="payDate" type="date"></label></div>
+        <div class="field full"><label>Keterangan<input id="payNote"></label></div>
+      </div>
+      <div class="actions">
+        <button class="btn danger" onclick="deletePayroll()">Hapus</button>
+        <button class="btn secondary" onclick="newPayroll()">Batal</button>
+        <button class="btn" onclick="savePayroll()">Simpan Pembayaran</button>
+        <button class="btn" onclick="printPayslip()">🖨 Cetak Slip</button>
+      </div>
+    </div>
+  </div>
+  <div class="card section">
+    <h3>Preview Slip Gaji</h3>
+    <div id="payslipPreview" class="slip-preview">Pilih data pembayaran untuk menampilkan slip gaji.</div>
+  </div>
+</section>
+
+<section id="percent" class="page">
+  <div class="card">
+    <h2>Kalkulator Persentase Proyek</h2>
+    <p class="muted">Hitung nilai persentase dari nilai proyek dan otomatis tampilkan sisa nilainya.</p>
+    <div class="form">
+      <div class="field"><label>Nilai Proyek<input id="pctBase" type="number" min="0" step="0.01" placeholder="Contoh: 1000000000"></label></div>
+      <div class="field"><label>Persentase (%)<input id="pctRate" type="number" min="0" max="100" step="0.01" value="15"></label></div>
+      <div class="field"><label>Nama Proyek / Keterangan<input id="pctName" placeholder="Contoh: Proyek Jalan Desa"></label></div>
+      <div class="field"><label>Jenis Perhitungan<select id="pctType"><option>Potongan / Fee</option><option>Uang Muka</option><option>Progress</option><option>Keuntungan</option><option>Cadangan</option><option>Lainnya</option></select></label></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="calculatePercent()">Hitung</button><button class="btn secondary" onclick="savePercentCalc()">Simpan Perhitungan</button></div>
+    <div class="percent-result">
+      <div class="percent-box"><span class="muted">Nilai Persentase</span><b id="pctValue">Rp 0</b></div>
+      <div class="percent-box"><span class="muted">Sisa Nilai</span><b id="pctRemain">Rp 0</b></div>
+      <div class="percent-box"><span class="muted">Persentase Sisa</span><b id="pctRemainRate">100%</b></div>
+    </div>
+  </div>
+  <div class="card"><h3>Riwayat Perhitungan</h3><table class="table"><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Nilai</th><th>%</th><th>Hasil</th><th>Sisa</th></tr></thead><tbody id="pctHistory"></tbody></table></div>
+</section>
+
+<section id="invoices" class="page">
+  <div class="card">
+    <div class="head">
+      <div><h2>Invoice Manual</h2><div class="muted">Buat invoice/tagihan di luar proyek secara manual.</div></div>
+      <button class="btn" onclick="newInvoice()">+ Invoice Baru</button>
+    </div>
+    <div class="pay-grid">
+      <div class="invoice-list" id="invoiceList"></div>
+      <div class="card" style="margin:0">
+        <h3 id="invoiceFormTitle">Invoice Baru</h3>
+        <div class="form">
+          <div class="field"><label>No. Invoice<input id="invNumber"></label></div>
+          <div class="field"><label>Tanggal<input id="invDate" type="date"></label></div>
+          <div class="field"><label>Jatuh Tempo<input id="invDue" type="date"></label></div>
+          <div class="field"><label>Status<select id="invStatus"><option>Draft</option><option>Belum Dibayar</option><option>Dibayar Sebagian</option><option>Lunas</option><option>Jatuh Tempo</option></select></label></div>
+          <div class="field full"><label>Nama Pelanggan / Instansi<input id="invCustomer"></label></div>
+          <div class="field"><label>No. HP / Kontak<input id="invPhone"></label></div>
+          <div class="field"><label>Email<input id="invEmail" type="email"></label></div>
+          <div class="field full"><label>Alamat<input id="invAddress"></label></div>
+          <div class="field full"><label>Uraian Tagihan<input id="invDescription" placeholder="Jasa, barang, pekerjaan, konsultasi, dll."></label></div>
+          <div class="field"><label>Jumlah<input id="invQty" type="number" min="0" step=".01" value="1"></label></div>
+          <div class="field"><label>Harga Satuan<input id="invPrice" type="number" min="0" value="0"></label></div>
+          <div class="field"><label>Diskon<input id="invDiscount" type="number" min="0" value="0"></label></div>
+          <div class="field"><label>Pajak (%)<input id="invTax" type="number" min="0" step=".01" value="0"></label></div>
+          <div class="field full"><label>Catatan / Syarat Pembayaran<input id="invNote"></label></div>
+        </div>
+        <div class="actions">
+          <button class="btn danger" onclick="deleteInvoice()">Hapus</button>
+          <button class="btn secondary" onclick="newInvoice()">Batal</button>
+          <button class="btn" onclick="saveInvoice()">Simpan Invoice</button>
+          <button class="btn" onclick="printInvoice()">🖨 Cetak Invoice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card"><h3>Preview Invoice</h3><div id="invoicePreview" class="slip-preview">Isi form invoice untuk melihat preview.</div></div>
+</section>
+
+
+<section id="receipts" class="page">
+  <div class="card">
+    <div class="head">
+      <div>
+        <h2>Kwitansi Manual</h2>
+        <div class="muted">Buat kwitansi pembayaran secara manual, simpan di browser, dan cetak untuk ditandatangani.</div>
+      </div>
+      <button class="btn" onclick="newReceipt()">+ Kwitansi Baru</button>
+    </div>
+
+    <div class="receipt-grid">
+      <div class="card" style="margin:0">
+        <h3>Daftar Kwitansi</h3>
+        <div class="receipt-list" id="receiptList"></div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h3 id="receiptFormTitle">Kwitansi Baru</h3>
+        <div class="form">
+          <div class="field"><label>No. Kwitansi<input id="rcNumber"></label></div>
+          <div class="field"><label>Tanggal<input id="rcDate" type="date"></label></div>
+
+          <div class="field full"><label>Sudah Terima Dari<input id="rcFrom" placeholder="Nama pelanggan / instansi"></label></div>
+          <div class="field full"><label>Alamat / Keterangan Pemberi<input id="rcAddress"></label></div>
+
+          <div class="field full">
+            <label>Uang Sejumlah
+              <input id="rcAmount" type="text" inputmode="numeric" placeholder="Rp 0">
+            </label>
+          </div>
+
+          <div class="field full"><label>Untuk Pembayaran<input id="rcPurpose" placeholder="Contoh: Pembayaran jasa, material, DP pekerjaan, dll."></label></div>
+
+          <div class="field"><label>Metode Pembayaran<select id="rcMethod"><option>Tunai</option><option>Transfer Bank</option><option>E-Wallet</option><option>Lainnya</option></select></label></div>
+          <div class="field"><label>Status<select id="rcStatus"><option>Lunas</option><option>DP / Sebagian</option><option>Belum Lunas</option></select></label></div>
+
+          <div class="field full"><label>Catatan<input id="rcNote" placeholder="Catatan tambahan / nomor referensi"></label></div>
+
+          <div class="field"><label>Nama Penerima<input id="rcReceiver" placeholder="Nama penerima"></label></div>
+          <div class="field"><label>Jabatan / Keterangan<input id="rcReceiverRole" placeholder="Bendahara / Admin / Penerima"></label></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn danger" onclick="deleteReceipt()">Hapus</button>
+          <button class="btn secondary" onclick="newReceipt()">Batal</button>
+          <button class="btn" onclick="saveReceipt()">Simpan Kwitansi</button>
+          <button class="btn" onclick="printReceipt()">🖨 Cetak Kwitansi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Preview Kwitansi</h3>
+    <div id="receiptPreview" class="receipt-preview">Isi form kwitansi untuk melihat preview.</div>
+  </div>
+</section>
+
+<section id="androidSync" class="page">
+<div class="card">
+  <div class="head">
+    <div><h2>Sinkron Android (LAN, tanpa cloud)</h2><div class="muted">Buka aplikasi ALFASTEC Android di HP yang terhubung ke WiFi yang sama dengan PC ini, lalu masukkan alamat di bawah.</div></div>
+    <button class="btn" id="androidSyncToggleBtn" onclick="toggleAndroidSync()">...</button>
+  </div>
+  <div id="androidSyncStatus" class="muted">Memuat status...</div>
+  <table class="table" style="margin-top:14px">
+    <thead><tr><th>Alamat untuk Android</th><th>Keterangan</th></tr></thead>
+    <tbody id="androidSyncAddrTable"></tbody>
+  </table>
+  <p class="muted" style="margin-top:14px">Lingkup sinkronisasi saat ini: <b>Buat Proyek, Data Jalan, RAB/BOQ</b>. Modul lain (Material, Payroll, Invoice, Kwitansi) menyusul.</p>
+</div>
+</section>
+<section id="finalGate" class="page">
+<style>
+.fg-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.fg-kpi{padding:15px;border:1px solid var(--line);border-radius:10px;background:#fff}.fg-kpi b{display:block;font-size:20px;margin-top:5px}
+.fg-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.fg-ok{color:#047857;font-weight:800}.fg-warn{color:#b45309;font-weight:800}
+.fg-check{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.fg-progress{height:10px;border-radius:8px;background:#e5e7eb;overflow:hidden}.fg-progress span{display:block;height:100%;background:#16a34a}
+@media(max-width:900px){.fg-kpis{grid-template-columns:1fr 1fr}.fg-grid{grid-template-columns:1fr}}
+</style>
+<div class="fg-kpis">
+<div class="fg-kpi"><span class="muted">RAB</span><b id="fgRab">Rp 0</b></div>
+<div class="fg-kpi"><span class="muted">Material</span><b id="fgMat">Rp 0</b></div>
+<div class="fg-kpi"><span class="muted">Tenaga</span><b id="fgLabor">Rp 0</b></div>
+<div class="fg-kpi"><span class="muted">Alat</span><b id="fgEquip">Rp 0</b></div>
+<div class="fg-kpi"><span class="muted">Kesiapan</span><b id="fgScore">0%</b></div>
+</div>
+
+<div class="fg-grid">
+<div class="card section">
+<div class="head"><div><h2>Final Gate Checklist</h2><div class="muted">Pemeriksaan sebelum proyek dianggap siap.</div></div>
+<button class="btn" onclick="fgRefresh()">↻ Periksa Ulang</button></div>
+<div id="fgChecks"></div>
+</div>
+
+<div class="card section">
+<h2>Ringkasan Biaya</h2>
+<table class="table"><tbody>
+<tr><td>Material</td><td id="fgMat2">Rp 0</td></tr>
+<tr><td>Tenaga Kerja</td><td id="fgLabor2">Rp 0</td></tr>
+<tr><td>Alat</td><td id="fgEquip2">Rp 0</td></tr>
+<tr><td><b>Total RAB</b></td><td><b id="fgTotal">Rp 0</b></td></tr>
+</tbody></table>
+<div style="margin-top:15px"><span class="muted">Kesiapan proyek</span><div class="fg-progress"><span id="fgBar" style="width:0%"></span></div></div>
+</div>
+</div>
+
+<div class="card section">
+<div class="head"><h2>Keputusan Final Gate</h2><span id="fgDecision" class="badge">BELUM DIPERIKSA</span></div>
+<p id="fgMessage" class="muted">Klik Periksa Ulang untuk menjalankan validasi.</p>
+<div class="actions">
+<button class="btn" onclick="fgPrint()">🖨 Cetak Final Gate</button>
+<button class="btn secondary" onclick="go('reports')">Lihat Laporan</button>
+</div>
+</div>
+</section>
+
+<section id="reports" class="page">
+<div class="card">
+ <div class="head"><div><h2>Laporan & Export</h2><div class="muted">Cetak atau simpan hasil BOQ, RAB, material, tenaga, dan alat.</div></div></div>
+ <div class="report-actions">
+  <button class="btn" onclick="printRAB()">🖨 Cetak / PDF RAB</button>
+  <button class="btn secondary" onclick="printBOQ()">🖨 Cetak / PDF BOQ</button>
+  <button class="btn secondary" onclick="exportCSV()">⇩ Export CSV RAB</button>
+ </div>
+ <div class="notice">Untuk PDF, gunakan dialog cetak browser lalu pilih <b>Save as PDF</b>. Export CSV dapat dibuka di Excel.</div>
+</div>
+
+<div class="report-grid">
+ <div class="card"><h3>Informasi Proyek</h3><div id="reportProjectInfo"></div></div>
+ <div class="card"><h3>Ringkasan Biaya</h3><div id="reportCostInfo"></div></div>
+</div>
+
+<div class="card section">
+ <div class="head"><h2>Preview RAB</h2><span class="badge blue">ALFASTEC</span></div>
+ <div id="reportPreview" class="report-preview"></div>
+</div>
+</section>
+<section id="projects" class="page"><div class="card"><h2>Daftar Proyek</h2><div class="muted" style="margin-bottom:14px">Data berasal dari database aplikasi, bukan data contoh.</div><table class="table"><thead><tr><th>Proyek</th><th>Lokasi</th><th>Status</th><th>Nilai</th><th>Diperbarui</th><th>Aksi</th></tr></thead><tbody id="projectsTable"></tbody></table></div></section>
+<div id="projectEditModal" class="modal hidden"><div class="modal-box"><h2>Edit Proyek</h2><div class="form"><div class="field"><label>Nama Proyek<input id="peName" placeholder="Nama proyek"></label></div><div class="field"><label>Lokasi<input id="peLocation" placeholder="Lokasi proyek"></label></div><div class="field"><label>Status<select id="peStatus"><option>Draft</option><option>Berjalan</option><option>Selesai</option><option>Ditunda</option></select></label></div><div class="field"><label>Nilai Proyek (Rp)<input id="peValue" type="number" min="0" step="1"></label></div></div><div class="modal-actions"><button class="btn danger" onclick="deleteProjectConfirm()">Hapus Proyek</button><button class="btn secondary" onclick="closeProjectEditModal()">Batal</button><button class="btn" onclick="saveProjectEdit()">Simpan Perubahan</button></div></div></div>
+<section id="create" class="page"><div class="steps"><span class="step on">1. Data Proyek</span><span class="step">2. Peta Ruas</span><span class="step">3. Data Jalan</span><span class="step">4. Perhitungan</span><span class="step">5. RAB</span></div><div class="card"><h2>Buat Proyek Baru</h2><div class="form"><div class="field"><label>Nama Proyek<input id="pn" placeholder="Nama proyek"></label></div><div class="field"><label>Lokasi<input id="pl" placeholder="Lokasi proyek"></label></div><div class="field"><label>Tahun<select id="py"><option>2026</option><option>2027</option></select></label></div><div class="field"><label>Jenis Proyek<select id="ptype"><option>Peningkatan Jalan</option><option>Rehabilitasi Jalan</option><option>Pembangunan Jalan</option><option>Pemeliharaan Jalan</option></select></label></div></div><div class="actions"><button class="btn" onclick="save()">Simpan dan Lanjutkan ke Peta</button></div></div></section>
+<section id="map" class="page"><div class="steps"><span class="step">1. Data Proyek</span><span class="step on">2. Peta Ruas</span><span class="step">3. Data Jalan</span><span class="step">4. Perhitungan</span><span class="step">5. RAB</span></div><div class="card"><h2>Data Ruas Jalan</h2><p class="muted">Masukkan panjang ruas secara langsung. Tidak ada batas 500 meter.</p><div class="form"><div class="field"><label>Panjang Ruas<div style="display:flex;gap:8px"><input id="roadLength" type="number" min="0" step="0.001" value="0" style="flex:1" oninput="updateRoadLengthPreview()"><select id="roadLengthUnit" onchange="onRoadLengthUnitChange()" style="width:90px"><option value="km">km</option><option value="m">m</option></select></div></label></div><div class="field"><label>Catatan Ruas<input id="roadNote" placeholder="Contoh: STA 0+000 s.d. STA 1+250"></label></div></div><div class="map"><div class="road"></div><div class="route"></div><div class="point p1"></div><div class="point p2"></div><div class="label l1">Titik Awal</div><div class="label l2">Titik Akhir</div><div class="distance"><small>Panjang Ruas</small><strong id="roadLengthDisplay">0 km</strong></div></div><div class="actions"><button class="btn" onclick="saveRoadAndContinue()">Simpan & Lanjutkan</button></div></div></section>
+<section id="road" class="page"><div class="card"><h2>Data Jalan</h2><div class="form"><div class="field"><label>Panjang Jalan (km)<input id="roadLength2" type="number" min="0" step="0.001" readonly></label></div><div class="field"><label>Lebar Jalan (m)<input id="roadWidth" type="number" min="0" step="0.01" value="0" oninput="liveUpdateRoadDraft()"></label></div><div class="field"><label>Lebar Bahu Jalan (m)<input id="shoulderWidth" type="number" min="0" step="0.01" value="0" oninput="liveUpdateRoadDraft()"></label></div><div class="field"><label>Jenis Perkerasan<select id="pavement" onchange="liveUpdateRoadDraft()"><option>Aspal</option><option>Beton</option><option>Agregat</option><option>Tanah</option></select></label></div><div class="field"><label>Kondisi Eksisting<select id="condition"><option>Baik</option><option>Rusak Ringan</option><option>Rusak Sedang</option><option>Rusak Berat</option></select></label></div></div><div class="actions"><button class="btn" onclick="saveRoadData()">Simpan Data Jalan & Lanjutkan</button></div></div>
+<div class="card section" id="roadMaterialEstimateCard">
+ <div class="head"><h2>Perkiraan Kebutuhan Bahan</h2><span class="badge blue" id="roadMaterialBadge">Belum ada data</span></div>
+ <div class="notice" id="roadMaterialInfo">Isi lebar jalan, lebar bahu, lalu pilih Jenis Perkerasan (Aspal/Beton/Agregat) — perkiraan kebutuhan bahan muncul otomatis di sini tanpa perlu mengisi AHSP secara manual.</div>
+ <table class="table"><thead><tr><th>Material</th><th>Koefisien</th><th>Kebutuhan</th><th>Satuan</th><th>Harga</th><th>Estimasi</th></tr></thead><tbody id="roadMaterialNeedTable"></tbody></table>
+ <div style="text-align:right;margin-top:15px"><span class="muted">TOTAL ESTIMASI MATERIAL</span><div class="total" id="roadMaterialNeedTotal">Rp 0</div></div>
+ <p class="muted" style="margin-top:10px">Perkiraan awal berdasarkan koefisien di menu Material → Koefisien Kebutuhan Material. Sesuaikan koefisien di sana bila perlu; harga resmi tetap harus mengikuti standar AHSP/SSH/HSPK yang berlaku.</p>
+</div>
+</section>
+<section id="calc" class="page"><div class="card"><h2>Perhitungan Volume</h2><p class="muted">Volume proyek dihitung dari data jalan. Pilih AHSP yang sesuai lalu tambahkan langsung ke BOQ — rincian barang (bahan/tenaga/alat) akan otomatis terhitung.</p><div id="calcSummary"></div><table class="table"><thead><tr><th>Item</th><th>Volume</th><th>Satuan</th><th>Pilih AHSP/Pekerjaan</th><th></th></tr></thead><tbody id="calcTable"></tbody></table><div class="actions"><button class="btn" onclick="goToBoqForCurrentProject()">Kelola BOQ/RAB</button><button class="btn secondary" onclick="go('rab')">Lihat RAB</button></div></div>
+<div class="card section" id="calcMaterialEstimateCard">
+ <div class="head"><h2>Perkiraan Kebutuhan Bahan (Otomatis)</h2><span class="badge green">Tanpa isi AHSP</span></div>
+ <p class="muted" id="calcMaterialInfo">Dihitung otomatis dari panjang, lebar, dan bahu jalan sesuai Jenis Perkerasan yang dipilih di menu Data Jalan.</p>
+ <table class="table"><thead><tr><th>Material</th><th>Koefisien</th><th>Kebutuhan</th><th>Satuan</th><th>Harga</th><th>Estimasi</th></tr></thead><tbody id="calcMaterialNeedTable"></tbody></table>
+ <div style="text-align:right;margin-top:15px"><span class="muted">TOTAL ESTIMASI MATERIAL</span><div class="total" id="calcMaterialNeedTotal">Rp 0</div></div>
+</div>
+</section>
+<section id="rab" class="page"><div class="card"><h2>Rencana Anggaran Biaya</h2><p class="muted">RAB ditarik dari BOQ yang tersimpan, bukan angka contoh.</p><table class="table"><thead><tr><th>No</th><th>Uraian Pekerjaan</th><th>Volume</th><th>Satuan</th><th>Harga Satuan</th><th>Jumlah</th></tr></thead><tbody id="workflowRabTable"></tbody></table><div style="text-align:right;margin-top:18px"><span class="muted">Total RAB</span><div class="total" id="workflowRabTotal">Rp 0</div></div><div class="actions"><button class="btn" onclick="go('summary')">Lihat Ringkasan</button></div></div></section>
+<section id="summary" class="page"><div class="card"><h2>Ringkasan Proyek</h2><div class="summary"><div>Nama Proyek<br><b id="sn">-</b></div><div>Lokasi<br><b id="sl">-</b></div><div>Panjang Jalan<br><b id="sumLength">0 km</b></div><div>Lebar Jalan<br><b id="sumWidth">0 m</b></div><div>Perkerasan<br><b id="sumPavement">-</b></div><div>Ruas<br><b id="sumNote">-</b></div></div><div class="card" style="margin-top:18px"><span class="muted">Total RAB</span><div class="total" id="workflowSumTotal">Rp 0</div></div><div class="actions"><button class="btn" onclick="saveProjectFinal()">Simpan Proyek</button></div></div></section>
+</main><script>
+const ALF_DB_API=window.alfastecAPI?.database;
+window.__alfStorageQueue=Promise.resolve();
+window.__alfHydrating=true;
+const ALF_MASTER_TABLE_KEYS={'alfastec_employees':'employees','alfastec_v9_materials':'materials','alfast_labor':'labor','alfast_equipment':'equipment','alfast_ahsp':'ahsp','alfastec_invoices':'invoices','alfastec_receipts':'receipts','alfastec_payroll':'payroll','alfastec_v9_stock_tx':'stock_transactions','alfast_boq':'boq'};
+function alfSyncMasterData(key,rawValue){
+  if(!ALF_DB_API?.syncMasterData)return;
+  const table=ALF_MASTER_TABLE_KEYS[key];
+  if(!table)return;
+  try{
+    const arr=JSON.parse(rawValue);
+    if(Array.isArray(arr))ALF_DB_API.syncMasterData(table,arr).catch(()=>{});
+  }catch(e){}
+}
+if(ALF_DB_API){
+  const _set=Storage.prototype.setItem, _remove=Storage.prototype.removeItem;
+  Storage.prototype.setItem=function(k,v){_set.call(this,k,String(v));if(!window.__alfHydrating && ALF_DB_API.storageSet){window.__alfStorageQueue=window.__alfStorageQueue.then(()=>ALF_DB_API.storageSet(k,String(v))).catch(()=>{});} if(!window.__alfHydrating)alfSyncMasterData(k,String(v)); };
+  Storage.prototype.removeItem=function(k){_remove.call(this,k);if(!window.__alfHydrating && ALF_DB_API.storageRemove){window.__alfStorageQueue=window.__alfStorageQueue.then(()=>ALF_DB_API.storageRemove(k)).catch(()=>{});} };
+}
+async function alfHydrateStorage(){
+  if(!ALF_DB_API?.storageLoad){window.__alfHydrating=false;return;}
+  const stored=await ALF_DB_API.storageLoad();
+  const keys=Object.keys(stored||{});
+  if(keys.length){
+    for(const k of keys) localStorage.setItem(k,stored[k]);
+  }else{
+    const seed={}; for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)seed[k]=localStorage.getItem(k);}
+    for(const [k,v] of Object.entries(seed)) await ALF_DB_API.storageSet(k,v);
+  }
+  window.__alfHydrating=false;
+}
+const meta={finalGate:['FINAL GATE','Pemeriksaan akhir proyek: RAB, material, tenaga kerja, alat, progres, dan laporan.'],reports:['Laporan','Cetak, PDF, dan export data RAB/BOQ.'],boq:['BOQ & RAB','Bill of Quantity dan RAB otomatis dari AHSP.'],prices:['Harga Satuan','Kelola harga komponen berdasarkan tahun dan lokasi.'],labor:['Tenaga Kerja','Master tenaga kerja dan upah untuk analisa pekerjaan.'],equipment:['Alat','Master peralatan dan tarif penggunaan untuk analisa pekerjaan.'],ahsp:['AHSP','Analisa harga satuan bahan, tenaga, dan alat untuk pekerjaan.'],materials:['Material & Bahan','Kelola bahan, harga, dan kebutuhan material proyek.'],employees:['Karyawan','Kelola data karyawan dan tim proyek.'],payroll:['Payroll & Slip Gaji','Kelola pembayaran gaji dan cetak slip gaji karyawan.'],percent:['Kalkulator Persentase','Hitung persentase nilai proyek dan sisa nilainya.'],invoices:['Invoice','Buat invoice manual di luar proyek.'],receipts:['Kwitansi Manual','Buat, simpan, dan cetak kwitansi pembayaran secara manual.'],dashboard:['Dashboard','Kelola proyek jalan, perhitungan volume, dan RAB.'],projects:['Proyek','Daftar proyek yang tersimpan.'],create:['Buat Proyek','Masukkan identitas proyek.'],map:['Peta Ruas','Tentukan ruas jalan secara custom.'],road:['Data Jalan','Masukkan parameter jalan.'],calc:['Perhitungan','Hitung volume pekerjaan.'],rab:['RAB','Susun rencana anggaran biaya.'],summary:['Ringkasan','Periksa hasil akhir proyek.'],androidSync:['Sinkron Android','Hubungkan aplikasi Android ke PC ini lewat WiFi yang sama, tanpa cloud.']};
+function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');document.getElementById('title').textContent=meta[id][0];document.getElementById('sub').textContent=meta[id][1];if(id==='androidSync')renderAndroidSync();if(id==='road')hydrateRoadFormFromDraft();if(id==='road'||id==='calc')renderMaterialEstimate();}
+function hydrateRoadFormFromDraft(){
+ const d=workflowDraft();
+ const rl2=document.getElementById('roadLength2'); if(rl2)rl2.value=d.lengthKm||0;
+ const rw=document.getElementById('roadWidth'); if(rw&&d.width!==undefined)rw.value=d.width;
+ const sw=document.getElementById('shoulderWidth'); if(sw&&d.shoulder!==undefined)sw.value=d.shoulder;
+ const pv=document.getElementById('pavement'); if(pv&&d.pavement)pv.value=d.pavement;
+ const cd=document.getElementById('condition'); if(cd&&d.condition)cd.value=d.condition;
+}
+function liveUpdateRoadDraft(){
+ const d=workflowDraft();
+ d.width=Number(document.getElementById('roadWidth').value)||0;
+ d.shoulder=Number(document.getElementById('shoulderWidth').value)||0;
+ d.pavement=document.getElementById('pavement').value;
+ saveWorkflowDraft(d);
+ renderMaterialEstimate();
+}
+/* Perkiraan Kebutuhan Bahan otomatis (panjang x lebar/bahu x koefisien v9NeedMap), independen dari AHSP */
+function pavementNeedKey(p){return {Aspal:'aspal',Beton:'beton',Agregat:'agregat'}[p]||null;}
+function materialEstimateBasis(){
+ const d=workflowDraft();
+ const lengthM=(Number(d.lengthKm)||0)*1000;
+ const width=Number(d.width)||0;
+ const shoulder=Number(d.shoulder)||0;
+ const mainArea=lengthM*width;
+ const shoulderArea=lengthM*shoulder;
+ const totalArea=mainArea+shoulderArea;
+ return {d,lengthM,width,shoulder,mainArea,shoulderArea,totalArea,key:pavementNeedKey(d.pavement)};
+}
+function fillMaterialNeedRows(tbody,rows,vol,ms){
+ if(!tbody)return 0;
+ let total=0;
+ const html=rows.map(([id,k])=>{const m=ms.find(x=>x.id===id);if(!m)return '';const qty=vol*k,cost=qty*m.price;total+=cost;return `<tr><td>${esc(m.name)}</td><td>${k}</td><td>${qty.toLocaleString('id-ID',{maximumFractionDigits:3})}</td><td>${esc(m.unit)}</td><td>${rupiah(m.price)}</td><td>${rupiah(cost)}</td></tr>`;}).join('');
+ tbody.innerHTML=html||'<tr><td colspan="6">Belum ada koefisien material untuk jenis perkerasan ini.</td></tr>';
+ return total;
+}
+function renderMaterialEstimate(){
+ const basis=materialEstimateBasis();
+ const ms=materialData();
+ const rows=basis.key?(v9NeedMap[basis.key]||[]):[];
+ const areaInfo='Luas badan jalan '+basis.mainArea.toLocaleString('id-ID',{maximumFractionDigits:2})+' m² + luas bahu '+basis.shoulderArea.toLocaleString('id-ID',{maximumFractionDigits:2})+' m² = total '+basis.totalArea.toLocaleString('id-ID',{maximumFractionDigits:2})+' m²'+(basis.d.pavement?(' — perkerasan '+basis.d.pavement):'');
+ const roadTbody=document.getElementById('roadMaterialNeedTable');
+ if(roadTbody){
+  const totalRoad=fillMaterialNeedRows(roadTbody,rows,basis.totalArea,ms);
+  const roadTotalEl=document.getElementById('roadMaterialNeedTotal'); if(roadTotalEl)roadTotalEl.textContent=rupiah(totalRoad);
+  const roadInfoEl=document.getElementById('roadMaterialInfo');
+  if(roadInfoEl)roadInfoEl.textContent=basis.key?areaInfo:(basis.d.pavement?('Jenis perkerasan "'+basis.d.pavement+'" belum memiliki koefisien kebutuhan material otomatis. Tambahkan koefisiennya di menu Material → Koefisien Kebutuhan Material.'):'Isi lebar jalan, lebar bahu, lalu pilih Jenis Perkerasan untuk melihat perkiraan kebutuhan bahan.');
+  const roadBadgeEl=document.getElementById('roadMaterialBadge'); if(roadBadgeEl)roadBadgeEl.textContent=basis.key?(rows.length+' material'):'Belum ada data';
+ }
+ const calcTbody=document.getElementById('calcMaterialNeedTable');
+ if(calcTbody){
+  const totalCalc=fillMaterialNeedRows(calcTbody,rows,basis.totalArea,ms);
+  const calcTotalEl=document.getElementById('calcMaterialNeedTotal'); if(calcTotalEl)calcTotalEl.textContent=rupiah(totalCalc);
+  const calcInfoEl=document.getElementById('calcMaterialInfo');
+  if(calcInfoEl)calcInfoEl.textContent=basis.key?areaInfo:'Pilih Jenis Perkerasan (Aspal/Beton/Agregat) di menu Data Jalan untuk melihat perkiraan otomatis.';
+ }
+}
+const WORKFLOW_KEY='alfastec_project_draft';
+function workflowDraft(){try{return JSON.parse(localStorage.getItem(WORKFLOW_KEY)||'{}')}catch(e){return {}}}
+function saveWorkflowDraft(d){localStorage.setItem(WORKFLOW_KEY,JSON.stringify(d));}
+/* FIX: `A` dan `money` sebelumnya hanya ada sebagai const lokal di dalam IIFE
+   "ALFASTEC FINAL AUDITED FUNCTIONAL LAYER" (baris ~758), sehingga tidak
+   terjangkau dari sini maupun dari renderWorkflowRab() → ReferenceError saat
+   alur Buat Proyek → Data Jalan → Perhitungan dijalankan. Didefinisikan ulang
+   di scope global sini; tidak memengaruhi const lokal bernama sama di IIFE lain. */
+function A(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+function money(n){return 'Rp '+(Number(n)||0).toLocaleString('id-ID');}
+function workflowMoney(n){return money(n);}
+
+/* ==================== Sinkron Android (Tahap 1 — UI status server LAN) ==================== */
+async function renderAndroidSync(){
+  const box=document.getElementById('androidSyncStatus');
+  const addrBody=document.getElementById('androidSyncAddrTable');
+  const btn=document.getElementById('androidSyncToggleBtn');
+  if(!box||!window.alfastecAPI?.network){ if(box) box.textContent='Fitur sinkron Android tidak tersedia di build ini.'; return; }
+  try{
+    const info=await window.alfastecAPI.network.lanInfo();
+    const on=info.enabled&&info.running;
+    box.innerHTML=on
+      ? `<span style="color:#16a34a;font-weight:600">● Aktif</span> — server sinkron LAN berjalan di port ${esc(String(info.port))}.`
+      : (info.enabled ? `<span style="color:#dc2626;font-weight:600">● Gagal jalan</span> — periksa apakah port ${esc(String(info.port))} dipakai aplikasi lain.` : `<span style="color:#6b7280;font-weight:600">● Nonaktif</span> — nyalakan untuk mengizinkan HP Android terhubung.`);
+    if(btn) btn.textContent=info.enabled?'Matikan Sinkron':'Nyalakan Sinkron';
+    if(addrBody){
+      const addrs=(info.addresses||[]);
+      addrBody.innerHTML = addrs.length
+        ? addrs.map(ip=>`<tr><td><code>http://${esc(ip)}:${esc(String(info.port))}</code></td><td class="muted">Masukkan alamat ini di aplikasi Android saat pertama kali pairing</td></tr>`).join('')
+        : `<tr><td colspan="2" class="muted">PC belum terhubung ke jaringan WiFi/LAN mana pun.</td></tr>`;
+    }
+  }catch(e){
+    box.textContent='Gagal memuat status: '+(e?.message||e);
+  }
+}
+async function toggleAndroidSync(){
+  if(!window.alfastecAPI?.network) return;
+  try{
+    const info=await window.alfastecAPI.network.lanInfo();
+    await window.alfastecAPI.network.toggleSync(!info.enabled);
+  }catch(e){ alert('Gagal mengubah status sinkron: '+(e?.message||e)); }
+  renderAndroidSync();
+}
+/* ==================== /Sinkron Android ==================== */
+async function save(){
+ const name=document.getElementById('pn').value.trim(), location=document.getElementById('pl').value.trim();
+ if(!name)return alert('Nama proyek wajib diisi.');
+ const d=workflowDraft(); d.name=name; d.location=location; d.year=document.getElementById('py').value; d.type=document.getElementById('ptype').value;
+ const code=d.code||('PRJ-'+name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').slice(0,30)+'-'+new Date().getTime());
+ d.code=code;
+ saveWorkflowDraft(d);
+ document.getElementById('sn').textContent=name; document.getElementById('sl').textContent=location||'-';
+ try{await ALF_DB_API?.saveProject({code,name,location,start_date:null,end_date:null,value:0,status:'Draft'}); await renderProjectsFromDb();}catch(e){alert('Proyek belum tersimpan: '+(e.message||e));return;}
+ go('map');
+}
+function roadLengthToKm(){const raw=Number(document.getElementById('roadLength').value)||0;const unit=document.getElementById('roadLengthUnit').value;return unit==='m'?raw/1000:raw;}
+function updateRoadLengthPreview(){const km=roadLengthToKm();const el=document.getElementById('roadLengthDisplay');if(!el)return;el.textContent=km.toLocaleString('id-ID',{maximumFractionDigits:3})+' km'+(km>0?(' ('+(km*1000).toLocaleString('id-ID',{maximumFractionDigits:0})+' m)'):'');}
+function onRoadLengthUnitChange(){const input=document.getElementById('roadLength');const newUnit=document.getElementById('roadLengthUnit').value;const prevUnit=input.dataset.prevUnit||'km';let val=Number(input.value)||0;if(prevUnit!==newUnit){if(prevUnit==='km'&&newUnit==='m')val=val*1000;else if(prevUnit==='m'&&newUnit==='km')val=val/1000;input.value=Math.round(val*1000)/1000;}input.dataset.prevUnit=newUnit;updateRoadLengthPreview();}
+function saveRoadAndContinue(){const d=workflowDraft();d.lengthKm=roadLengthToKm();d.lengthInputUnit=document.getElementById('roadLengthUnit').value;d.roadNote=document.getElementById('roadNote').value.trim();if(d.lengthKm<=0)return alert('Panjang ruas harus lebih dari 0.');saveWorkflowDraft(d);document.getElementById('roadLength2').value=d.lengthKm;document.getElementById('roadLengthDisplay').textContent=d.lengthKm.toLocaleString('id-ID',{maximumFractionDigits:3})+' km';go('road');}
+function saveRoadData(){const d=workflowDraft();d.width=Number(document.getElementById('roadWidth').value)||0;d.shoulder=Number(document.getElementById('shoulderWidth').value)||0;d.pavement=document.getElementById('pavement').value;d.condition=document.getElementById('condition').value;if(d.width<=0)return alert('Lebar jalan harus lebih dari 0 meter.');saveWorkflowDraft(d);renderWorkflowCalculation();go('calc');}
+function workflowCalcItems(){const d=workflowDraft();const area=(Number(d.lengthKm)||0)*1000*(Number(d.width)||0);const items=[];if(area>0)items.push({name:'Luas perkerasan',volume:area,unit:'m²'});return items;}
+function renderWorkflowCalculation(){const d=workflowDraft(),tbody=document.getElementById('calcTable');if(!tbody)return;const items=workflowCalcItems();const ahspOptions='<option value="">Pilih AHSP</option>'+A('alfast_ahsp').map(x=>`<option value="${x.id}">${esc(x.code)} — ${esc(x.name)}</option>`).join('');document.getElementById('calcSummary').innerHTML='<div class="summary"><div>Panjang<br><b>'+((Number(d.lengthKm)||0).toLocaleString('id-ID'))+' km</b></div><div>Lebar<br><b>'+((Number(d.width)||0).toLocaleString('id-ID'))+' m</b></div><div>Luas<br><b>'+(items[0]?items[0].volume.toLocaleString('id-ID'):'0')+' m²</b></div><div>Perkerasan<br><b>'+esc(d.pavement||'-')+'</b></div></div>';tbody.innerHTML=items.map((x,i)=>'<tr><td>'+esc(x.name)+'</td><td>'+x.volume.toLocaleString('id-ID',{maximumFractionDigits:3})+'</td><td>'+x.unit+'</td><td><select id="calcAhsp_'+i+'">'+ahspOptions+'</select></td><td><button class="btn" onclick="pushToBoqFromCalc('+i+')">+ Ke BOQ</button></td></tr>').join('')||'<tr><td colspan="5">Lengkapi data jalan untuk menghitung volume.</td></tr>';renderWorkflowRab();}
+window.pushToBoqFromCalc=function(idx){
+ const d=workflowDraft();
+ if(!d.code)return alert('Simpan data proyek terlebih dahulu di menu "Buat Proyek".');
+ const items=workflowCalcItems(),it=items[idx];
+ if(!it)return alert('Item volume tidak ditemukan.');
+ const sel=document.getElementById('calcAhsp_'+idx),ahspId=sel?sel.value:'';
+ if(!ahspId)return alert('Pilih AHSP/pekerjaan yang sesuai untuk item ini terlebih dahulu.');
+ const h=A('alfast_ahsp').find(x=>x.id===ahspId);
+ if(!h)return alert('AHSP tidak ditemukan.');
+ const boq=A('alfast_boq');
+ boq.push({id:'BOQ_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),code:h.code,name:h.name,unit:h.unit,volume:it.volume,price:Number(h.price)||0,ahspId:ahspId,projectCode:d.code});
+ localStorage.setItem('alfast_boq',JSON.stringify(boq));
+ renderWorkflowRab();
+ alert('Volume "'+it.name+'" berhasil ditambahkan ke BOQ proyek "'+(d.name||d.code)+'". Rincian barang (bahan/tenaga/alat) otomatis tersedia di menu BOQ & RAB.');
+};
+window.goToBoqForCurrentProject=function(){
+ go('boq');
+ const d=workflowDraft();
+ const sel=document.getElementById('boqProject');
+ if(sel&&d.code){
+  if(![...sel.options].some(o=>o.value===d.code))sel.innerHTML+=`<option value="${esc(d.code)}">${esc(d.name||d.code)}</option>`;
+  sel.value=d.code;
+ }
+ renderBOQ();
+};
+function renderWorkflowRab(){const d2p=workflowDraft();const d=A('alfast_boq').filter(x=>!d2p.code||x.projectCode===d2p.code),tbody=document.getElementById('workflowRabTable');if(!tbody)return;const total=d.reduce((s,x)=>s+(Number(x.volume)||0)*(Number(x.price)||0),0);tbody.innerHTML=d.map((x,i)=>'<tr><td>'+ (i+1) +'</td><td>'+esc(x.name||'')+'</td><td>'+Number(x.volume||0).toLocaleString('id-ID')+'</td><td>'+esc(x.unit||'')+'</td><td>'+money(x.price)+'</td><td>'+money((Number(x.volume)||0)*(Number(x.price)||0))+'</td></tr>').join('')||'<tr><td colspan="6">Belum ada item BOQ untuk proyek ini. Tambahkan dari menu Perhitungan atau BOQ & RAB.</td></tr>';document.getElementById('workflowRabTotal').textContent=money(total);document.getElementById('workflowSumTotal').textContent=money(total);const d2=workflowDraft();document.getElementById('sn').textContent=d2.name||'-';document.getElementById('sl').textContent=d2.location||'-';document.getElementById('sumLength').textContent=(Number(d2.lengthKm)||0).toLocaleString('id-ID')+' km';document.getElementById('sumWidth').textContent=(Number(d2.width)||0).toLocaleString('id-ID')+' m';document.getElementById('sumPavement').textContent=d2.pavement||'-';document.getElementById('sumNote').textContent=d2.roadNote||'Custom';}
+/* ===== ALFASTEC V9 - MATERIAL CONTROL ===== */
+const V9_KEY='alfastec_v9_materials';
+const V9_TX='alfastec_v9_stock_tx';
+let v9EditId=null;
+const v9DefaultMaterials=[
+ {id:'MAT-001',code:'SMN-50',name:'Semen Portland',category:'Semen',unit:'zak',price:75000,stock:100,min:20,supplier:'Supplier Lokal',note:'Data awal; silakan sesuaikan dengan harga aktual.'},
+ {id:'MAT-002',code:'PSR-01',name:'Pasir Beton',category:'Pasir',unit:'m³',price:250000,stock:50,min:10,supplier:'Supplier Lokal',note:''},
+ {id:'MAT-003',code:'AGG-01',name:'Agregat Kelas A',category:'Agregat',unit:'m³',price:450000,stock:30,min:8,supplier:'Supplier Lokal',note:''},
+ {id:'MAT-004',code:'BAT-01',name:'Batu Pecah 2/3',category:'Batu',unit:'m³',price:380000,stock:25,min:5,supplier:'Supplier Lokal',note:''},
+ {id:'MAT-005',code:'BES-10',name:'Besi Beton 10 mm',category:'Besi',unit:'kg',price:14500,stock:1000,min:200,supplier:'Supplier Besi',note:''},
+ {id:'MAT-006',code:'ASP-01',name:'Aspal Hotmix',category:'Aspal',unit:'ton',price:1250000,stock:20,min:5,supplier:'AMP',note:''}
+];
+const v9NeedMap={
+ persiapan:[['MAT-003',0.05],['MAT-002',0.02]],
+ agregat:[['MAT-003',1.00],['MAT-004',0.15]],
+ aspal:[['MAT-006',1.00],['MAT-003',0.10]],
+ beton:[['MAT-001',7.50],['MAT-002',0.55],['MAT-004',0.80],['MAT-005',80]]
+};
+function v9Load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function v9Save(k,d){localStorage.setItem(k,JSON.stringify(d))}
+function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0)}
+function materialData(){return v9Load(V9_KEY,v9DefaultMaterials)}
+function stockTx(){return v9Load(V9_TX,[])}
+function stockFor(m){let base=Number(m.stock)||0; return base+stockTx().filter(t=>t.materialId===m.id).reduce((a,t)=>a+(t.type==='in'?1:-1)*Number(t.qty||0),0)}
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function renderMaterials(){
+ const ms=materialData(), tx=stockTx();
+ const list=document.getElementById('materialList');
+ if(list) list.innerHTML=ms.map(m=>`<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="editMaterial('${m.id}')"><div class="head"><div><b>${esc(m.name)}</b><div class="muted">${esc(m.code)} · ${esc(m.category)} · ${esc(m.unit)}</div></div><span class="badge">${rupiah(m.price)}</span></div><div class="muted">Stok: <b>${stockFor(m).toLocaleString('id-ID')}</b> ${esc(m.unit)} · Min: ${Number(m.min||0).toLocaleString('id-ID')}</div></div>`).join('')||'<div class="empty">Belum ada material.</div>';
+ const st=document.getElementById('stockTable'); if(st) st.innerHTML=ms.map(m=>{let q=stockFor(m),low=q<=Number(m.min||0);return `<tr><td>${esc(m.code)}</td><td>${esc(m.name)}</td><td>${q.toLocaleString('id-ID')}</td><td>${Number(m.min||0).toLocaleString('id-ID')}</td><td>${rupiah(m.price)}</td><td><span class="badge ${low?'danger':'green'}">${low?'STOK RENDAH':'AMAN'}</span></td><td><button class="btn secondary" onclick="editMaterial('${m.id}')">Edit</button></td></tr>`}).join('')||'<tr><td colspan="7">Belum ada material.</td></tr>';
+ const sm=document.getElementById('stockMaterial'); if(sm) sm.innerHTML=ms.map(m=>`<option value="${m.id}">${esc(m.name)} (${esc(m.unit)})</option>`).join('');
+ const stx=document.getElementById('stockTxTable'); if(stx) stx.innerHTML=tx.slice().reverse().map((t,i)=>{let m=ms.find(x=>x.id===t.materialId);return `<tr><td>${esc(t.date)}</td><td>${esc(m?.name||'Material dihapus')}</td><td>${t.type==='in'?'Masuk':'Keluar'}</td><td>${Number(t.qty).toLocaleString('id-ID')} ${esc(m?.unit||'')}</td><td><button class="btn danger" onclick="deleteStockTransaction('${t.id}')">Hapus</button></td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Belum ada transaksi.</td></tr>';
+ const cnt=document.getElementById('materialCount'); if(cnt) cnt.textContent=ms.length+' item'; const tc=document.getElementById('stockTxCount'); if(tc) tc.textContent=tx.length+' transaksi';
+}
+function newMaterial(){v9EditId=null; ['matCode','matName','matPrice','matStock','matSupplier','matNote'].forEach(id=>{let e=document.getElementById(id);if(e)e.value=''}); let e=document.getElementById('matCategory');if(e)e.value='Semen';e=document.getElementById('matUnit');if(e)e.value='kg';let t=document.getElementById('materialFormTitle');if(t)t.textContent='Tambah Material'}
+function editMaterial(id){let m=materialData().find(x=>x.id===id);if(!m)return;v9EditId=id;document.getElementById('matCode').value=m.code;document.getElementById('matName').value=m.name;document.getElementById('matCategory').value=m.category;document.getElementById('matUnit').value=m.unit;document.getElementById('matPrice').value=m.price;document.getElementById('matStock').value=m.stock;document.getElementById('mMin').value=m.min||0;document.getElementById('matSupplier').value=m.supplier||'';document.getElementById('matNote').value=m.note||'';document.getElementById('materialFormTitle').textContent='Edit Material: '+m.name;document.getElementById('materialFormTitle').scrollIntoView({behavior:'smooth',block:'center'})}
+/* FIX: sebelumnya, setelah obj.min dibaca dari field #mMin, baris berikutnya
+   ("obj.min=ms[i]?.min||0") langsung menimpanya kembali dengan nilai lama dari
+   data tersimpan — perubahan Stok Minimum yang diedit user selalu dibuang.
+   Baris penimpaan itu dihapus; obj.min kini konsisten memakai nilai dari form. */
+function saveMaterial(){let code=document.getElementById('matCode').value.trim(),name=document.getElementById('matName').value.trim();if(!code||!name){alert('Kode dan nama material wajib diisi.');return}let ms=materialData();let obj={id:v9EditId||('MAT-'+Date.now()),code,name,category:document.getElementById('matCategory').value,unit:document.getElementById('matUnit').value,price:Number(document.getElementById('matPrice').value)||0,stock:Number(document.getElementById('matStock').value)||0,min:Number(document.getElementById('mMin')?.value)||0,supplier:document.getElementById('matSupplier').value.trim(),note:document.getElementById('matNote').value.trim()};if(v9EditId){let i=ms.findIndex(x=>x.id===v9EditId);ms[i]=obj}else ms.push(obj);v9Save(V9_KEY,ms);renderMaterials();newMaterial();alert('Material berhasil disimpan.')}
+function deleteMaterial(){if(!v9EditId){newMaterial();return}if(!confirm('Hapus material ini?'))return;v9Save(V9_KEY,materialData().filter(x=>x.id!==v9EditId));v9EditId=null;renderMaterials();newMaterial()}
+function addStockTransaction(){let id=document.getElementById('stockMaterial').value,q=Number(document.getElementById('stockQty').value)||0,type=document.getElementById('stockType').value;if(!id||q<=0){alert('Pilih material dan isi jumlah yang benar.');return}let ms=materialData(),m=ms.find(x=>x.id===id);if(type==='out'&&stockFor(m)<q){alert('Stok tidak mencukupi.');return}let tx=stockTx();tx.push({id:'TX-'+Date.now(),materialId:id,type,qty:q,date:new Date().toLocaleDateString('id-ID')});v9Save(V9_TX,tx);renderMaterials();document.getElementById('stockQty').value=1}
+function deleteStockTransaction(id){v9Save(V9_TX,stockTx().filter(t=>t.id!==id));renderMaterials()}
+function calculateMaterialNeed(){let key=document.getElementById('needWork').value,vol=Number(document.getElementById('needVolume').value)||0,ms=materialData(),rows=v9NeedMap[key]||[],total=0;let html=rows.map(([id,k])=>{let m=ms.find(x=>x.id===id);if(!m)return '';let qty=vol*k,cost=qty*m.price;total+=cost;return `<tr><td>${esc(m.name)}</td><td>${k}</td><td>${qty.toLocaleString('id-ID',{maximumFractionDigits:3})}</td><td>${esc(m.unit)}</td><td>${rupiah(m.price)}</td><td>${rupiah(cost)}</td></tr>`}).join('');document.getElementById('needTable').innerHTML=html||'<tr><td colspan="6">Belum ada koefisien material.</td></tr>';document.getElementById('materialTotal').textContent=rupiah(total);document.getElementById('materialCount').textContent=rows.length+' komponen'}
+function initV9(){renderMaterials();calculateMaterialNeed();}
+window.addEventListener('load',initV9);
+
+
+/* ===== ALFASTEC FINAL GATE ===== */
+(function(){
+const money=n=>'Rp '+(Number(n)||0).toLocaleString('id-ID');
+const arr=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}};
+function fgRefresh(){
+ const boq=arr('alfast_boq');
+ const rab=boq.reduce((s,x)=>s+(Number(x.volume)||0)*(Number(x.price)||0),0);
+ const materials=arr('alfastec_v9_materials');
+ const labor=arr('alfast_labor');
+ const equip=arr('alfast_equipment');
+ const checks=[
+  ['Navigasi seluruh modul tersedia', ['dashboard','projects','employees','materials','ahsp','labor','equipment','prices','boq','reports','payroll','percent','invoices','receipts','create','map','road','calc','rab','summary','finalGate'].every(id=>!!document.getElementById(id))],
+  ['CRUD karyawan tersedia', ['newEmployee','saveEmployee','deleteEmployee'].every(x=>typeof window[x]==='function')],
+  ['CRUD material & stok tersedia', ['newMaterial','saveMaterial','deleteMaterial','addStockTransaction'].every(x=>typeof window[x]==='function')],
+  ['CRUD AHSP tersedia', ['newAHSP','saveAHSP','deleteAHSP'].every(x=>typeof window[x]==='function')],
+  ['Komponen AHSP & rincian barang proyek tersedia', ['addAhspComponent','removeAhspComponent','printMaterialNeed','exportMaterialNeedCSV'].every(x=>typeof window[x]==='function')],
+  ['CRUD tenaga & alat tersedia', ['newLabor','saveLabor','deleteLabor','newEquipment','saveEquipment','deleteEquipment'].every(x=>typeof window[x]==='function')],
+  ['Harga satuan tersedia', ['newPrice','savePrice','deletePrice'].every(x=>typeof window[x]==='function')],
+  ['BOQ/RAB tersedia', ['addBOQ','recalculateBOQ','clearBOQ','deleteBOQ'].every(x=>typeof window[x]==='function')],
+  ['Laporan & export tersedia', ['printRAB','printBOQ','exportCSV'].every(x=>typeof window[x]==='function')],
+  ['Payroll, persentase & invoice tersedia', ['newPayroll','savePayroll','deletePayroll','printPayslip','calculatePercent','savePercentCalc','newInvoice','saveInvoice','deleteInvoice','printInvoice'].every(x=>typeof window[x]==='function')],
+  ['Kwitansi tersedia', ['newReceipt','saveReceipt','deleteReceipt','printReceipt'].every(x=>typeof window[x]==='function')],
+  ['Database Electron tersedia', !!window.alfastecAPI?.database],
+  ['Backup database tersedia', typeof window.alfastecAPI?.database?.backup==='function'],
+  ['Penyimpanan persisten aktif', typeof window.alfastecAPI?.database?.storageSet==='function' && typeof window.alfastecAPI?.database?.storageLoad==='function']
+ ];
+ const passed=checks.filter(x=>x[1]).length, pct=Math.round(passed/checks.length*100);
+ document.getElementById('fgRab').textContent=money(rab);
+ document.getElementById('fgMat').textContent=money(materials.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.stock)||0),0));
+ document.getElementById('fgLabor').textContent=money(labor.reduce((s,x)=>s+(Number(x.price)||0),0));
+ document.getElementById('fgEquip').textContent=money(equip.reduce((s,x)=>s+(Number(x.price)||0),0));
+ document.getElementById('fgMat2').textContent=document.getElementById('fgMat').textContent;
+ document.getElementById('fgLabor2').textContent=document.getElementById('fgLabor').textContent;
+ document.getElementById('fgEquip2').textContent=document.getElementById('fgEquip').textContent;
+ document.getElementById('fgTotal').textContent=money(rab);
+ document.getElementById('fgScore').textContent=pct+'%'; document.getElementById('fgBar').style.width=pct+'%';
+ document.getElementById('fgChecks').innerHTML=checks.map(x=>'<div class="fg-check"><span>'+x[0]+'</span><span class="'+(x[1]?'fg-ok':'fg-warn')+'">'+(x[1]?'✓ LULUS':'⚠ PERLU PERBAIKAN')+'</span></div>').join('');
+ const ready=passed===checks.length;
+ document.getElementById('fgDecision').textContent=ready?'READY':'REVIEW';
+ document.getElementById('fgMessage').textContent=ready?'FINAL GATE LULUS — seluruh pemeriksaan otomatis terpenuhi. Data proyek dapat mulai diinput.':'FINAL GATE BELUM LULUS — ada pemeriksaan teknis yang belum terpenuhi.';
+}
+window.fgRefresh=fgRefresh;
+window.fgPrint=function(){fgRefresh();setTimeout(()=>window.print(),100)};
+if(document.readyState==='loading')
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(fgRefresh,100));
+else setTimeout(fgRefresh,100);
+})();
+
+
+
+/* ===== ALFASTEC FINAL AUDITED FUNCTIONAL LAYER ===== */
+(function(){
+"use strict";
+const A=k=>{try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}};
+const S=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const uid=p=>p+"_"+Date.now()+"_"+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const money=n=>"Rp "+(Number(n)||0).toLocaleString("id-ID");
+let E={employee:null,ahsp:null,labor:null,equipment:null,price:null};
+
+window.newEmployee=function(){E.employee=null;["empId","empName","empDivision","empPhone","empEmail","empJoin","empSkill","empNote"].forEach(id=>{let e=document.getElementById(id);if(e)e.value=""});};
+window.saveEmployee=function(){let name=empName.value.trim();if(!name)return alert("Nama karyawan wajib diisi.");let d=A("alfastec_employees"),x={id:E.employee||uid("EMP"),nik:empId.value.trim(),name,position:empPosition.value,division:empDivision.value.trim(),phone:empPhone.value.trim(),email:empEmail.value.trim(),status:empStatus.value,join:empJoin.value,skill:empSkill.value.trim(),note:empNote.value.trim()};let i=d.findIndex(z=>z.id===E.employee);if(i>=0)d[i]=x;else d.push(x);S("alfastec_employees",d);renderEmployees();newEmployee();};
+window.editEmployee=function(id){let x=A("alfastec_employees").find(z=>z.id===id);if(!x)return;E.employee=id;empId.value=x.nik||"";empName.value=x.name||"";empPosition.value=x.position||"Administrator";empDivision.value=x.division||"";empPhone.value=x.phone||"";empEmail.value=x.email||"";empStatus.value=x.status||"Aktif";empJoin.value=x.join||"";empSkill.value=x.skill||"";empNote.value=x.note||"";};
+window.deleteEmployee=function(){if(!E.employee)return alert("Pilih karyawan.");if(confirm("Hapus karyawan ini?")){S("alfastec_employees",A("alfastec_employees").filter(x=>x.id!==E.employee));newEmployee();renderEmployees();}};
+function renderEmployees(){let d=A("alfastec_employees");if(employeeList)employeeList.innerHTML=d.map(x=>`<div class="emp-card" onclick="editEmployee('${x.id}')"><b>${esc(x.name)}</b><div class="emp-meta">${esc(x.position||"")} · ${esc(x.division||"")}</div></div>`).join("")||"Belum ada karyawan.";if(teamTable)teamTable.innerHTML=d.filter(x=>x.status!=="Nonaktif").map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.position||"")}</td><td>${esc(x.division||"")}</td><td>${esc(x.status||"")}</td></tr>`).join("")||'<tr><td colspan="4">Belum ada tim.</td></tr>';if(teamCount)teamCount.textContent=d.filter(x=>x.status!=="Nonaktif").length+" orang";}
+
+let E_ahspComponents=[];
+function compSourceKey(type){return type==="labor"?"alfast_labor":type==="equipment"?"alfast_equipment":V9_KEY;}
+function compSourceData(type){return type==="labor"?A("alfast_labor"):type==="equipment"?A("alfast_equipment"):materialData();}
+function compLabel(type){return type==="labor"?"Tenaga":type==="equipment"?"Alat":"Bahan";}
+window.fillAhspCompOptions=function(){let type=document.getElementById("ahspCompType").value,items=compSourceData(type),sel=document.getElementById("ahspCompItem");if(sel)sel.innerHTML=items.map(x=>`<option value="${x.id}">${esc(x.name)} (${esc(x.unit||"")})</option>`).join("")||'<option value="">Belum ada data</option>';};
+window.addAhspComponent=function(){let type=document.getElementById("ahspCompType").value,itemId=document.getElementById("ahspCompItem").value,coef=Number(document.getElementById("ahspCompCoef").value)||0;if(!itemId)return alert("Belum ada data "+compLabel(type).toLowerCase()+". Tambahkan dahulu di menu terkait.");if(coef<=0)return alert("Koefisien harus lebih dari 0.");let item=compSourceData(type).find(x=>x.id===itemId);if(!item)return alert("Komponen tidak ditemukan.");let ex=E_ahspComponents.find(c=>c.type===type&&c.itemId===itemId);if(ex)ex.coef=coef;else E_ahspComponents.push({type,itemId,coef});renderAhspComponents();};
+window.removeAhspComponent=function(idx){E_ahspComponents.splice(idx,1);renderAhspComponents();};
+function ahspComponentTotal(){return E_ahspComponents.reduce((s,c)=>{let item=compSourceData(c.type).find(x=>x.id===c.itemId);return s+(item?Number(item.price||0)*Number(c.coef||0):0);},0);}
+function renderAhspComponents(){let tbody=document.getElementById("ahspComponents");if(!tbody)return;tbody.innerHTML=E_ahspComponents.map((c,i)=>{let item=compSourceData(c.type).find(x=>x.id===c.itemId);let price=item?Number(item.price||0):0,total=price*Number(c.coef||0);return `<tr><td>${compLabel(c.type)}</td><td>${esc(item?item.name:"(dihapus)")}</td><td>${Number(c.coef).toLocaleString("id-ID",{maximumFractionDigits:4})}</td><td>${money(price)}</td><td>${money(total)}</td><td><button class="btn danger" onclick="removeAhspComponent(${i})">Hapus</button></td></tr>`;}).join("")||'<tr><td colspan="6">Belum ada komponen.</td></tr>';let total=ahspComponentTotal();document.getElementById("ahspUnitPrice").textContent=money(total)+" / satuan";if(E_ahspComponents.length)document.getElementById("ahspPrice").value=total;updateSelectedAhspPreview();}
+function updateSelectedAhspPreview(){
+ let badge=document.getElementById("selectedAhspBadge"),box=document.getElementById("ahspProjectSummary");
+ if(!badge||!box)return;
+ if(!E.ahsp&&!E_ahspComponents.length){badge.textContent="Belum dipilih";box.className="empty";box.innerHTML="Belum ada AHSP yang dipilih.";return;}
+ let name=(document.getElementById("ahspName").value||"AHSP baru").trim()||"AHSP baru";
+ badge.textContent=name;
+ box.className="";
+ let byType={material:[],labor:[],equipment:[]};
+ E_ahspComponents.forEach(c=>{let item=compSourceData(c.type).find(x=>x.id===c.itemId);if(item)byType[c.type].push(`${item.name} (${Number(c.coef).toLocaleString("id-ID",{maximumFractionDigits:4})} ${item.unit||""}/satuan)`);});
+ box.innerHTML=["material","labor","equipment"].map(t=>`<div style="margin-bottom:8px"><b>${compLabel(t)}:</b> ${byType[t].length?byType[t].map(esc).join(", "):"(belum ada)"}</div>`).join("");
+}
+window.newAHSP=function(){E.ahsp=null;ahspCode.value="";ahspName.value="";ahspPrice.value="";ahspFormTitle.textContent="Tambah Analisa Pekerjaan";E_ahspComponents=[];renderAhspComponents();fillAhspCompOptions();};
+window.editAHSP=function(id){let x=A("alfast_ahsp").find(z=>z.id===id);if(!x)return;E.ahsp=id;ahspCode.value=x.code||"";ahspName.value=x.name||"";ahspUnit.value=x.unit||"m³";ahspCategory.value=x.category||"Pekerjaan Tanah";ahspPrice.value=x.price||0;E_ahspComponents=Array.isArray(x.components)?JSON.parse(JSON.stringify(x.components)):[];renderAhspComponents();fillAhspCompOptions();};
+window.saveAHSP=function(){let code=ahspCode.value.trim(),name=ahspName.value.trim();if(!code||!name)return alert("Kode dan nama AHSP wajib diisi.");let d=A("alfast_ahsp"),x={id:E.ahsp||uid("AHSP"),code,name,unit:ahspUnit.value,category:ahspCategory.value,price:Number(window.ahspPrice?.value)||0,components:E_ahspComponents.slice()};let i=d.findIndex(z=>z.id===E.ahsp);if(i>=0)d[i]=x;else d.push(x);S("alfast_ahsp",d);renderAHSP();};
+window.deleteAHSP=function(){if(!E.ahsp)return alert("Pilih AHSP.");if(confirm("Hapus AHSP ini?")){S("alfast_ahsp",A("alfast_ahsp").filter(x=>x.id!==E.ahsp));newAHSP();renderAHSP();}};
+function renderAHSP(){let d=A("alfast_ahsp");if(ahspList)ahspList.innerHTML=d.map(x=>`<div class="ahsp-card" onclick="editAHSP('${x.id}')"><b>${esc(x.name)}</b><div class="ahsp-meta">${esc(x.code)} · ${esc(x.unit||"")} · ${money(x.price)} · ${(x.components||[]).length} komponen</div></div>`).join("")||"Belum ada AHSP.";if(boqAhsp)boqAhsp.innerHTML='<option value="">Pilih AHSP</option>'+d.map(x=>`<option value="${x.id}">${esc(x.code)} — ${esc(x.name)}</option>`).join("");}
+
+window.newLabor=function(){E.labor=null;laborCode.value="";laborName.value="";laborPrice.value="";laborNote.value="";};
+window.editLabor=function(id){let x=A("alfast_labor").find(z=>z.id===id);if(!x)return;E.labor=id;laborCode.value=x.code||"";laborName.value=x.name||"";laborCategory.value=x.category||"Pekerja";laborUnit.value=x.unit||"OH";laborPrice.value=x.price||0;laborStatus.value=x.status||"Aktif";laborNote.value=x.note||"";};
+window.saveLabor=function(){let name=laborName.value.trim();if(!name)return alert("Nama tenaga wajib diisi.");let d=A("alfast_labor"),x={id:E.labor||uid("LAB"),code:laborCode.value.trim(),name,category:laborCategory.value,unit:laborUnit.value,price:Number(laborPrice.value)||0,status:laborStatus.value,note:laborNote.value.trim()};let i=d.findIndex(z=>z.id===E.labor);if(i>=0)d[i]=x;else d.push(x);S("alfast_labor",d);renderLabor();};
+window.deleteLabor=function(){if(!E.labor)return alert("Pilih tenaga.");if(confirm("Hapus tenaga ini?")){S("alfast_labor",A("alfast_labor").filter(x=>x.id!==E.labor));newLabor();renderLabor();}};
+function renderLabor(){let d=A("alfast_labor");if(laborList)laborList.innerHTML=d.map(x=>`<div class="resource-card" onclick="editLabor('${x.id}')"><b>${esc(x.name)}</b><div class="resource-meta">${esc(x.category||"")} · ${money(x.price)}</div></div>`).join("")||"Belum ada tenaga.";if(laborTable)laborTable.innerHTML=d.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.category||"")}</td><td>${esc(x.unit||"OH")}</td><td>${money(x.price)}</td><td>${esc(x.status||"Aktif")}</td></tr>`).join("")||'<tr><td colspan="5">Belum ada data.</td></tr>';if(laborCount)laborCount.textContent=d.length+" item";}
+
+window.newEquipment=function(){E.equipment=null;equipCode.value="";equipName.value="";equipPrice.value="";equipNote.value="";};
+window.editEquipment=function(id){let x=A("alfast_equipment").find(z=>z.id===id);if(!x)return;E.equipment=id;equipCode.value=x.code||"";equipName.value=x.name||"";equipCategory.value=x.category||"Alat Berat";equipUnit.value=x.unit||"jam";equipPrice.value=x.price||0;equipStatus.value=x.status||"Tersedia";equipNote.value=x.note||"";};
+window.saveEquipment=function(){let name=equipName.value.trim();if(!name)return alert("Nama alat wajib diisi.");let d=A("alfast_equipment"),x={id:E.equipment||uid("EQ"),code:equipCode.value.trim(),name,category:equipCategory.value,unit:equipUnit.value,price:Number(equipPrice.value)||0,status:equipStatus.value,note:equipNote.value.trim()};let i=d.findIndex(z=>z.id===E.equipment);if(i>=0)d[i]=x;else d.push(x);S("alfast_equipment",d);renderEquipment();};
+window.deleteEquipment=function(){if(!E.equipment)return alert("Pilih alat.");if(confirm("Hapus alat ini?")){S("alfast_equipment",A("alfast_equipment").filter(x=>x.id!==E.equipment));newEquipment();renderEquipment();}};
+function renderEquipment(){let d=A("alfast_equipment");if(equipmentList)equipmentList.innerHTML=d.map(x=>`<div class="resource-card" onclick="editEquipment('${x.id}')"><b>${esc(x.name)}</b><div class="resource-meta">${esc(x.category||"")} · ${money(x.price)}</div></div>`).join("")||"Belum ada alat.";if(equipmentTable)equipmentTable.innerHTML=d.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.category||"")}</td><td>${esc(x.unit||"jam")}</td><td>${money(x.price)}</td><td>${esc(x.status||"Tersedia")}</td></tr>`).join("")||'<tr><td colspan="5">Belum ada data.</td></tr>';if(equipmentCount)equipmentCount.textContent=d.length+" item";}
+
+window.newPrice=function(){E.price=null;["priceName","priceLocation","priceUnit","priceValue","priceSource","priceDate","priceNote"].forEach(id=>document.getElementById(id).value="");};
+window.editPrice=function(id){let x=A("alfast_prices").find(z=>z.id===id);if(!x)return;E.price=id;priceType.value=x.type||"Bahan";priceName.value=x.name||"";priceYear.value=x.year||"2026";priceLocation.value=x.location||"";priceUnit.value=x.unit||"";priceValue.value=x.value||0;priceSource.value=x.source||"";priceDate.value=x.date||"";priceNote.value=x.note||"";};
+window.savePrice=function(){let name=priceName.value.trim();if(!name)return alert("Nama komponen wajib diisi.");let d=A("alfast_prices"),x={id:E.price||uid("PRICE"),type:priceType.value,name,year:priceYear.value,location:priceLocation.value.trim(),unit:priceUnit.value.trim(),value:Number(priceValue.value)||0,source:priceSource.value.trim(),date:priceDate.value,note:priceNote.value.trim()};let i=d.findIndex(z=>z.id===E.price);if(i>=0)d[i]=x;else d.push(x);S("alfast_prices",d);renderPrices();};
+window.deletePrice=function(){if(!E.price)return alert("Pilih harga.");if(confirm("Hapus harga ini?")){S("alfast_prices",A("alfast_prices").filter(x=>x.id!==E.price));newPrice();renderPrices();}};
+function renderPrices(){let d=A("alfast_prices");if(priceList)priceList.innerHTML=d.map(x=>`<div class="price-card" onclick="editPrice('${x.id}')"><b>${esc(x.name)}</b><div class="price-meta">${esc(x.type)} · ${x.year||""} · ${esc(x.location||"")}</div><div class="price-current">${money(x.value)}</div></div>`).join("")||"Belum ada harga.";if(priceHistoryTable)priceHistoryTable.innerHTML=d.map(x=>`<tr><td>${x.year||""}</td><td>${esc(x.location||"")}</td><td>${money(x.value)}</td><td>${esc(x.source||"")}</td><td>${esc(x.date||"")}</td></tr>`).join("")||'<tr><td colspan="5">Belum ada riwayat.</td></tr>';if(priceHistoryCount)priceHistoryCount.textContent=d.length+" data";}
+
+window.fillBoqUnit=function(){let h=A("alfast_ahsp").find(x=>x.id===boqAhsp.value);if(boqUnit)boqUnit.value=h?(h.unit||""):"";};
+window.addBOQ=function(){let pcode=boqProject.value;if(!pcode)return alert("Pilih proyek terlebih dahulu.");let id=boqAhsp.value,q=Number(boqQty.value)||0;if(!id||q<=0)return alert("Pilih AHSP dan isi volume.");let h=A("alfast_ahsp").find(x=>x.id===id);if(!h)return alert("AHSP tidak ditemukan.");let d=A("alfast_boq");d.push({id:uid("BOQ"),code:h.code,name:h.name,unit:h.unit,volume:q,price:Number(h.price)||0,ahspId:id,projectCode:pcode});S("alfast_boq",d);renderBOQ();};
+window.deleteBOQ=function(id){if(confirm("Hapus item BOQ ini?")){S("alfast_boq",A("alfast_boq").filter(x=>x.id!==id));renderBOQ();}};
+window.clearBOQ=function(){if(confirm("Kosongkan seluruh BOQ/RAB?")){S("alfast_boq",[]);renderBOQ();}};
+window.recalculateBOQ=function(){renderBOQ();};
+function currentBoqScope(){let pcode=boqProject?boqProject.value:"";let all=A("alfast_boq");return {pcode,list:pcode?all.filter(x=>x.projectCode===pcode):all};}
+function projectNameByCode(code){let p=(window._alfProjectsCache||[]).find(x=>x.code===code);return p?p.name:code;}
+function renderBOQ(){let {pcode,list:d}=currentBoqScope(),total=d.reduce((s,x)=>s+(Number(x.volume)||0)*(Number(x.price)||0),0);if(boqTable)boqTable.innerHTML=d.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.code||"")}</td><td>${esc(x.name||"")}</td><td>${Number(x.volume||0).toLocaleString("id-ID")}</td><td>${esc(x.unit||"")}</td><td>${money(x.price)}</td><td>${money((x.volume||0)*(x.price||0))}</td><td><button class="btn danger" onclick="deleteBOQ('${x.id}')">Hapus</button></td></tr>`).join("")||'<tr><td colspan="8">Belum ada item BOQ'+(pcode?" untuk proyek ini.":".")+'</td></tr>';if(boqItemCount)boqItemCount.textContent=d.length+" pekerjaan"+(pcode?" (proyek terpilih)":" (seluruh proyek)");if(rabGrandTotal)rabGrandTotal.textContent=money(total);
+ let notice=document.getElementById("boqScopeNotice");if(notice)notice.textContent=pcode?("Menampilkan BOQ, RAB, dan rincian barang khusus untuk proyek: "+projectNameByCode(pcode)+"."):"Belum ada proyek dipilih — rekap di bawah ini mencakup seluruh pekerjaan lintas proyek. Pilih proyek pada kolom di atas untuk rincian barang per proyek.";
+ renderBOQComponents(d,pcode);
+}
+/* FIX: renderBOQ() hanya lokal di dalam IIFE "ALFASTEC FINAL AUDITED
+   FUNCTIONAL LAYER" ini, tapi dipanggil dari onchange="renderBOQ()" pada
+   dropdown #boqProject dan dari renderWorkflowRab() di scope global →
+   ReferenceError: renderBOQ is not defined saat proyek dipilih di tab
+   BOQ & RAB atau saat alur Buat Proyek → RAB dijalankan. Diexpose ke
+   window mengikuti pola fix window.renderPayEmployees di atas. */
+window.renderBOQ=renderBOQ;
+/* ===== Rincian Barang (Bahan/Tenaga/Alat) Kebutuhan Proyek ===== */
+function computeMaterialNeed(boqList){
+ let ahspAll=A("alfast_ahsp"),agg={};
+ boqList.forEach(item=>{
+  let ahsp=ahspAll.find(a=>a.id===item.ahspId);
+  if(!ahsp||!Array.isArray(ahsp.components))return;
+  let vol=Number(item.volume)||0;
+  ahsp.components.forEach(c=>{
+   let src=compSourceData(c.type),comp=src.find(x=>x.id===c.itemId);
+   if(!comp)return;
+   let key=c.type+"_"+c.itemId;
+   let qty=vol*Number(c.coef||0);
+   let price=Number(comp.price||0);
+   if(!agg[key])agg[key]={type:c.type,code:comp.code||"",name:comp.name,unit:comp.unit||"",qty:0,price};
+   agg[key].qty+=qty;
+  });
+ });
+ return Object.values(agg).sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):(a.type==="material"?-1:b.type==="material"?1:a.type.localeCompare(b.type)));
+}
+function renderBOQComponents(boqList,pcode){
+ let rows=computeMaterialNeed(boqList||currentBoqScope().list);
+ let tbody=document.getElementById("boqComponentsTable");
+ let matTotal=0,laborTotal=0,eqTotal=0;
+ if(tbody)tbody.innerHTML=rows.map((r,i)=>{let cost=r.qty*r.price;if(r.type==="material")matTotal+=cost;else if(r.type==="labor")laborTotal+=cost;else eqTotal+=cost;return `<tr><td>${i+1}</td><td>${compLabel(r.type)}</td><td>${esc(r.code)}</td><td>${esc(r.name)}</td><td>${r.qty.toLocaleString("id-ID",{maximumFractionDigits:3})}</td><td>${esc(r.unit)}</td><td>${money(r.price)}</td><td>${money(cost)}</td></tr>`;}).join("")||'<tr><td colspan="8">Belum ada rincian barang. Lengkapi komponen (Bahan/Tenaga/Alat) pada setiap AHSP yang dipakai di BOQ.</td></tr>';
+ if(document.getElementById("rabMaterial"))document.getElementById("rabMaterial").textContent=money(matTotal);
+ if(document.getElementById("rabLabor"))document.getElementById("rabLabor").textContent=money(laborTotal);
+ if(document.getElementById("rabEquipment"))document.getElementById("rabEquipment").textContent=money(eqTotal);
+ let scope=document.getElementById("boqComponentsScope");
+ if(scope)scope.textContent=pcode?("Rincian lengkap barang, tenaga, dan alat untuk proyek: "+projectNameByCode(pcode)+" ("+rows.length+" jenis komponen)."):("Rincian gabungan seluruh proyek ("+rows.length+" jenis komponen). Pilih proyek untuk rincian per proyek.");
+ return rows;
+}
+window.printMaterialNeed=function(){
+ let {pcode,list}=currentBoqScope(),rows=computeMaterialNeed(list);
+ if(!rows.length)return alert("Belum ada rincian barang untuk dicetak. Pastikan AHSP pada BOQ sudah memiliki komponen Bahan/Tenaga/Alat.");
+ let lines=[(window.ALF_BRAND_NAME||"ALFASTEC")+" — RINCIAN BARANG KEBUTUHAN PROYEK","Proyek: "+(pcode?projectNameByCode(pcode):"Seluruh Proyek"),"Tanggal: "+new Date().toLocaleString("id-ID"),""];
+ let total=0;
+ rows.forEach((r,i)=>{let cost=r.qty*r.price;total+=cost;lines.push(`${i+1}. [${compLabel(r.type)}] ${r.name} — ${r.qty.toLocaleString("id-ID",{maximumFractionDigits:3})} ${r.unit} x ${money(r.price)} = ${money(cost)}`);});
+ lines.push("","TOTAL KEBUTUHAN: "+money(total));
+ let w=window.open("","_blank");if(!w)return alert("Popup diblokir browser.");w.document.write("<pre style='font:14px Arial;white-space:pre-wrap'>"+esc(lines.join("\n"))+"</pre>");w.document.close();w.print();
+};
+window.exportMaterialNeedCSV=function(){
+ let {pcode,list}=currentBoqScope(),rows=computeMaterialNeed(list);
+ if(!rows.length)return alert("Belum ada rincian barang untuk diexport.");
+ let head=["jenis","kode","nama","kebutuhan","satuan","harga_satuan","biaya"];
+ let q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+ let csv=[head.join(","),...rows.map(r=>[compLabel(r.type),r.code,r.name,r.qty,r.unit,r.price,r.qty*r.price].map(q).join(","))].join("\r\n");
+ let a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));a.download="ALFASTEC_Rincian_Barang"+(pcode?"_"+pcode:"")+".csv";a.click();
+};
+
+function reportText(){let d=A("alfast_boq");return [(window.ALF_BRAND_NAME||"ALFASTEC")+" — LAPORAN RAB","Tanggal: "+new Date().toLocaleString("id-ID"),"",...d.map((x,i)=>`${i+1}. ${x.code||""} | ${x.name||""} | ${x.volume||0} ${x.unit||""} | ${money((x.volume||0)*(x.price||0))}`),"","TOTAL: "+money(d.reduce((s,x)=>s+(Number(x.volume)||0)*(Number(x.price)||0),0))].join("\n");}
+window.exportCSV=function(){let d=A("alfast_boq");if(!d.length)return alert("Belum ada data BOQ/RAB.");let keys=["code","name","volume","unit","price","ahspId"],q=v=>'"'+String(v??"").replace(/"/g,'""')+'"',csv=[keys.join(","),...d.map(x=>keys.map(k=>q(x[k])).join(","))].join("\r\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));a.download="ALFASTEC_RAB.csv";a.click();};
+window.printRAB=function(){let w=window.open("","_blank");if(!w)return alert("Popup diblokir browser.");w.document.write("<pre style='font:14px Arial;white-space:pre-wrap'>"+esc(reportText())+"</pre>");w.document.close();w.print();};window.printBOQ=window.printRAB;
+
+async function renderProjectsFromDb(){if(!ALF_DB_API?.projectsList)return;const d=await ALF_DB_API.projectsList();window._alfProjectsCache=d;const rows=d.map(x=>`<tr><td>${esc(x.name||"")}</td><td>${esc(x.location||"")}</td><td><span class="badge">${esc(x.status||"Draft")}</span></td><td>${money(x.value||0)}</td><td>${esc(x.updated_at||"")}</td><td><button class="btn secondary" onclick="openProjectEditModal(${x.id})">Edit</button></td></tr>`).join("")||'<tr><td colspan="6">Belum ada proyek tersimpan.</td></tr>';if(document.getElementById('projectsTable'))document.getElementById('projectsTable').innerHTML=rows;if(document.getElementById('dashboardProjectTable'))document.getElementById('dashboardProjectTable').innerHTML=d.slice(0,10).map(x=>`<tr><td>${esc(x.name||"")}</td><td>${esc(x.location||"")}</td><td><span class="badge">${esc(x.status||"Draft")}</span></td><td>${money(x.value||0)}</td></tr>`).join("")||'<tr><td colspan="4">Belum ada proyek.</td></tr>';if(document.getElementById('dashProjects'))document.getElementById('dashProjects').textContent=d.length;if(document.getElementById('dashRunning'))document.getElementById('dashRunning').textContent=d.filter(x=>x.status==='Berjalan').length;if(document.getElementById('dashDone'))document.getElementById('dashDone').textContent=d.filter(x=>x.status==='Selesai').length;if(document.getElementById('dashValue'))document.getElementById('dashValue').textContent=money(d.reduce((a,x)=>a+(Number(x.value)||0),0));if(document.getElementById('boqProject'))document.getElementById('boqProject').innerHTML='<option value="">Pilih proyek</option>'+d.map(x=>`<option value="${esc(x.code)}">${esc(x.name)}</option>`).join("");}
+/* FIX: renderProjectsFromDb() hanya lokal di dalam IIFE "ALFASTEC FINAL
+   AUDITED FUNCTIONAL LAYER" ini, tapi dipanggil dari save() dan dari
+   window.saveProjectFinal() di bawah ini (keduanya butuh scope global) →
+   ReferenceError: renderProjectsFromDb is not defined saat tombol "Simpan
+   dan Lanjutkan ke Peta" ditekan di alur Buat Proyek. Diexpose ke window
+   mengikuti pola fix window.renderPayEmployees di atas. */
+window.renderProjectsFromDb=renderProjectsFromDb;
+let _editingProjectId=null;
+function openProjectEditModal(id){const list=window._alfProjectsCache||[];const p=list.find(x=>String(x.id)===String(id));if(!p)return alert('Proyek tidak ditemukan.');_editingProjectId=p.id;document.getElementById('peName').value=p.name||'';document.getElementById('peLocation').value=p.location||'';document.getElementById('peStatus').value=p.status||'Draft';document.getElementById('peValue').value=p.value||0;document.getElementById('projectEditModal').classList.remove('hidden');}
+window.openProjectEditModal=openProjectEditModal;
+function closeProjectEditModal(){document.getElementById('projectEditModal').classList.add('hidden');_editingProjectId=null;}
+window.closeProjectEditModal=closeProjectEditModal;
+async function saveProjectEdit(){if(!_editingProjectId)return;const name=document.getElementById('peName').value.trim();if(!name)return alert('Nama proyek wajib diisi.');const location=document.getElementById('peLocation').value.trim();const status=document.getElementById('peStatus').value;const value=Number(document.getElementById('peValue').value)||0;try{await ALF_DB_API?.updateProject(_editingProjectId,{name,location,status,value});await renderProjectsFromDb();closeProjectEditModal();}catch(e){alert('Gagal menyimpan perubahan: '+(e.message||e));}}
+window.saveProjectEdit=saveProjectEdit;
+async function deleteProjectConfirm(){if(!_editingProjectId)return;if(!confirm('Hapus proyek ini beserta seluruh data BOQ terkait? Tindakan ini tidak dapat dibatalkan.'))return;try{await ALF_DB_API?.deleteProject(_editingProjectId);await renderProjectsFromDb();closeProjectEditModal();}catch(e){alert('Gagal menghapus proyek: '+(e.message||e));}}
+window.deleteProjectConfirm=deleteProjectConfirm;
+window.saveProjectFinal=async function(){try{const id=await ALF_DB_API?.saveProject({code:'PRJ-'+document.getElementById('pn').value.toUpperCase().replace(/[^A-Z0-9]+/g,'-').slice(0,30)+'-'+new Date().getFullYear(),name:document.getElementById('pn').value.trim(),location:document.getElementById('pl').value.trim(),value:0,status:'Draft'});await renderProjectsFromDb();alert('Proyek tersimpan di database (ID '+id+').');}catch(e){alert('Gagal menyimpan proyek: '+(e.message||e));}};
+window.addEventListener("load",async()=>{try{await alfHydrateStorage();}catch(e){console.error(e);window.__alfHydrating=false;}renderEmployees();renderAHSP();renderLabor();renderEquipment();renderPrices();renderBOQ();if(typeof renderMaterials==="function")renderMaterials();await renderProjectsFromDb();if(ALF_DB_API?.syncMasterData){for(const k of Object.keys(ALF_MASTER_TABLE_KEYS)){try{const raw=localStorage.getItem(k);if(raw)alfSyncMasterData(k,raw);}catch(e){}}}});
+window.ALFASTEC_AUDIT=function(){return [
+["Navigasi menu",["dashboard","projects","employees","materials","ahsp","labor","equipment","prices","boq","reports","create","map","road","calc","rab","summary","finalGate"].every(id=>!!document.getElementById(id))],
+["Karyawan CRUD",["newEmployee","saveEmployee","deleteEmployee"].every(x=>typeof window[x]==="function")],
+["Material CRUD",["newMaterial","saveMaterial","deleteMaterial","addStockTransaction"].every(x=>typeof window[x]==="function")],
+["AHSP CRUD",["newAHSP","saveAHSP","deleteAHSP"].every(x=>typeof window[x]==="function")],
+["Tenaga CRUD",["newLabor","saveLabor","deleteLabor"].every(x=>typeof window[x]==="function")],
+["Alat CRUD",["newEquipment","saveEquipment","deleteEquipment"].every(x=>typeof window[x]==="function")],
+["Harga CRUD",["newPrice","savePrice","deletePrice"].every(x=>typeof window[x]==="function")],
+["BOQ/RAB",["addBOQ","recalculateBOQ","clearBOQ","deleteBOQ"].every(x=>typeof window[x]==="function")],
+["Laporan",["printRAB","printBOQ","exportCSV"].every(x=>typeof window[x]==="function")],
+["Final Gate",["fgRefresh","fgPrint"].every(x=>typeof window[x]==="function")],["Payroll",["newPayroll","savePayroll","deletePayroll","printPayslip"].every(x=>typeof window[x]==="function")],["Kalkulator Persentase",["calculatePercent","savePercentCalc"].every(x=>typeof window[x]==="function")],["Invoice",["newInvoice","saveInvoice","deleteInvoice","printInvoice"].every(x=>typeof window[x]==="function")]
+].map(x=>({fungsi:x[0],aktif:x[1]}));};
+})();
+
+/* ===== ALFASTEC PAYROLL / PERCENTAGE / INVOICE ===== */
+(function(){
+"use strict";
+const readArr=k=>{try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}};
+const saveArr=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const fmt=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const safe=s=>typeof esc==='function'?esc(s):String(s??'');
+const uid2=p=>p+"_"+Date.now()+"_"+Math.random().toString(36).slice(2,7);
+let payrollEdit=null, invoiceEdit=null;
+
+function employeeData(){return readArr('alfastec_employees')}
+function newPayroll(){
+ payrollEdit=null;
+ ['payBasic','payAllowance','payBonus','payOvertime','payDeduction','payNote'].forEach(id=>document.getElementById(id).value='0');
+ document.getElementById('payNote').value='';
+ document.getElementById('payPeriod').value=new Date().toISOString().slice(0,7);
+ document.getElementById('payDate').value=new Date().toISOString().slice(0,10);
+ document.getElementById('payStatus').value='Dibayar';
+ document.getElementById('payMethod').value='Transfer Bank';
+ document.getElementById('payFormTitle').textContent='Pembayaran Gaji';
+ renderPayEmployees(); renderPayroll();
+}
+function renderPayEmployees(){
+ const e=employeeData(), sel=document.getElementById('payEmployee');
+ if(sel) sel.innerHTML=e.map(x=>`<option value="${safe(x.id)}">${safe(x.name)}${x.position?' — '+safe(x.position):''}</option>`).join('')||'<option value="">Belum ada karyawan</option>';
+ document.getElementById('payEmpCount').textContent=e.length;
+}
+function payrollNet(x){return (Number(x.basic)||0)+(Number(x.allowance)||0)+(Number(x.bonus)||0)+(Number(x.overtime)||0)-(Number(x.deduction)||0)}
+function renderPayroll(){
+ const d=readArr('alfastec_payroll'), e=employeeData(), list=document.getElementById('payrollList');
+ let gross=d.reduce((s,x)=>s+(+x.basic||0)+(+x.allowance||0)+(+x.bonus||0)+(+x.overtime||0),0);
+ let ded=d.reduce((s,x)=>s+(+x.deduction||0),0);
+ document.getElementById('payTotal').textContent=fmt(gross); document.getElementById('payDeduct').textContent=fmt(ded); document.getElementById('payNet').textContent=fmt(gross-ded);
+ list.innerHTML=d.slice().reverse().map(x=>{let emp=e.find(z=>z.id===x.employeeId);return `<div class="pay-card" onclick="editPayroll('${x.id}')"><b>${safe(emp?.name||'Karyawan')}</b><div class="muted">${safe(x.period||'')} · ${safe(x.status||'')}</div><strong>${fmt(payrollNet(x))}</strong></div>`}).join('')||'<div class="muted">Belum ada pembayaran.</div>';
+ renderPayslip();
+}
+window.newPayroll=newPayroll;
+/* FIX: renderPayEmployees() hanya lokal di IIFE Payroll ini, tapi dipanggil
+   dari load-listener modul Persentase/Invoice (blok script terpisah, baris ~1072).
+   Tanpa expose ke window, panggilan itu ReferenceError dan menggagalkan
+   seluruh listener 'load' sehingga Payroll/Persentase/Invoice tidak auto-render. */
+window.renderPayEmployees=renderPayEmployees;
+window.editPayroll=function(id){
+ const x=readArr('alfastec_payroll').find(z=>z.id===id); if(!x)return; payrollEdit=id;
+ document.getElementById('payEmployee').value=x.employeeId||''; document.getElementById('payPeriod').value=x.period||'';
+ ['basic','allowance','bonus','overtime','deduction'].forEach(k=>document.getElementById('pay'+k[0].toUpperCase()+k.slice(1)).value=x[k]||0);
+ document.getElementById('payMethod').value=x.method||'Transfer Bank'; document.getElementById('payStatus').value=x.status||'Dibayar'; document.getElementById('payDate').value=x.date||''; document.getElementById('payNote').value=x.note||'';
+ renderPayslip();
+};
+window.savePayroll=function(){
+ const employeeId=document.getElementById('payEmployee').value;if(!employeeId)return alert('Pilih karyawan.');
+ let d=readArr('alfastec_payroll'), x={id:payrollEdit||uid2('PAY'),employeeId,period:payPeriod.value,basic:+payBasic.value||0,allowance:+payAllowance.value||0,bonus:+payBonus.value||0,overtime:+payOvertime.value||0,deduction:+payDeduction.value||0,method:payMethod.value,status:payStatus.value,date:payDate.value,note:payNote.value.trim()};
+ const i=d.findIndex(z=>z.id===x.id); if(i>=0)d[i]=x;else d.push(x); saveArr('alfastec_payroll',d); payrollEdit=x.id; renderPayroll(); alert('Pembayaran gaji tersimpan.');
+};
+window.deletePayroll=function(){if(!payrollEdit)return alert('Pilih pembayaran.');if(!confirm('Hapus pembayaran ini?'))return;saveArr('alfastec_payroll',readArr('alfastec_payroll').filter(x=>x.id!==payrollEdit));newPayroll()};
+function renderPayslip(){
+ const box=document.getElementById('payslipPreview'), d=readArr('alfastec_payroll'), x=d.find(z=>z.id===payrollEdit)||d[d.length-1]; if(!x){box.innerHTML='Pilih data pembayaran untuk menampilkan slip gaji.';return}
+ const emp=employeeData().find(z=>z.id===x.employeeId), gross=(+x.basic||0)+(+x.allowance||0)+(+x.bonus||0)+(+x.overtime||0);
+ box.innerHTML=`<div class="slip-head"><h2>SLIP GAJI KARYAWAN</h2><p>${safe(window.ALF_BRAND_NAME||'ALFASTEC')}</p><p>Periode: ${safe(x.period||'-')}</p></div>
+ <table class="slip-table"><tr><td><b>Nama</b></td><td>${safe(emp?.name||'-')}</td></tr><tr><td>Jabatan</td><td>${safe(emp?.position||'-')}</td></tr><tr><td>Status Pembayaran</td><td>${safe(x.status||'-')}</td></tr>
+ <tr><td>Gaji Pokok</td><td>${fmt(x.basic)}</td></tr><tr><td>Tunjangan</td><td>${fmt(x.allowance)}</td></tr><tr><td>Bonus / Insentif</td><td>${fmt(x.bonus)}</td></tr><tr><td>Lembur</td><td>${fmt(x.overtime)}</td></tr><tr><td><b>Total Pendapatan</b></td><td><b>${fmt(gross)}</b></td></tr><tr><td>Potongan</td><td>-${fmt(x.deduction)}</td></tr></table>
+ <div class="slip-total">GAJI BERSIH: ${fmt(payrollNet(x))}</div><p class="muted">Metode: ${safe(x.method||'-')} · Tanggal: ${safe(x.date||'-')}</p><p>${safe(x.note||'')}</p>`;
+}
+window.printPayslip=function(){
+  renderPayslip();
+  const h=document.getElementById('payslipPreview').innerHTML;
+  const w=window.open('','_blank');
+  if(!w)return alert('Popup diblokir browser.');
+  w.document.write(`<html><head><title>Slip Gaji</title>
+    <style>
+    @page{size:A4;margin:15mm}
+    body{font:14px Arial;padding:35px}
+    table{width:100%;border-collapse:collapse}
+    td{padding:8px;border-bottom:1px solid #ddd}
+    .slip-head{text-align:center;border-bottom:2px solid #111;padding-bottom:10px}
+    .slip-total{text-align:right;font-size:20px;font-weight:bold;margin-top:15px}
+    </style></head><body>${h}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(()=>w.print(),150);
+};
+})();
+</script>
+<div id="alfastecSupport">
+  Copyright © 2026 <a onclick="alfSupport()">Una Digital Solution</a> · Bantuan & Solusi
+</div>
+
+<script>
+window.addEventListener('load',()=>{const d=workflowDraft();if(d.name){document.getElementById('pn').value=d.name;document.getElementById('pl').value=d.location||'';document.getElementById('py').value=d.year||'2026';document.getElementById('ptype').value=d.type||'Peningkatan Jalan';}if(d.lengthKm){const _u=d.lengthInputUnit||'km';const _rl=document.getElementById('roadLengthUnit');if(_rl)_rl.value=_u;const _rli=document.getElementById('roadLength');if(_rli){_rli.dataset.prevUnit=_u;_rli.value=_u==='m'?Math.round(d.lengthKm*1000*1000)/1000:d.lengthKm;}updateRoadLengthPreview();document.getElementById('roadLength2').value=d.lengthKm;}if(d.width)document.getElementById('roadWidth').value=d.width;if(d.shoulder)document.getElementById('shoulderWidth').value=d.shoulder;if(d.pavement)document.getElementById('pavement').value=d.pavement;if(d.condition)document.getElementById('condition').value=d.condition;renderWorkflowCalculation();});
+const _go=go;go=function(id,btn){_go(id,btn);if(id==='calc')renderWorkflowCalculation();if(id==='rab'||id==='summary'||id==='reports')renderWorkflowRab();};
+</script>
+<script id="alfastec-electron-bridge">
+(function(){
+  const api=window.alfastecAPI;
+  if(!api) return;
+  let currentUser=null;
+
+  async function bootTrialGate(){
+    const local=await api.license.localStatus(); if(local?.licensed){document.getElementById('alfastecTrialOverlay')?.remove();return true;}
+    const t=await api.license.trialStatus(); const body=document.getElementById('alfTrialBody'),title=document.getElementById('alfTrialTitle');
+    if(t.active){title.textContent='Masa Trial Gratis 7 Hari';body.innerHTML='<div class="alf-trial-days">'+t.remainingDays+' hari</div><p style="text-align:center;color:#475569">Silakan gunakan aplikasi untuk mencoba semua fitur.</p><p style="font-size:12px;color:#64748b;text-align:center">Setelah 7 hari, aplikasi akan terkunci sampai lisensi sah diaktifkan.</p><button onclick="document.getElementById(\'alfastecTrialOverlay\').remove()">Mulai Menggunakan</button>';return true;}
+    if(t.needsOnline){title.textContent='Trial Belum Dapat Dimulai';body.innerHTML='<div class="alf-trial-lock">Server lisensi trial tidak dapat dihubungi. Hubungkan internet lalu coba lagi.</div><button onclick="location.reload()">Coba Lagi</button>';return false;}
+    title.textContent='Trial Berakhir — Aplikasi Terkunci';body.innerHTML='<div class="alf-trial-days" style="color:#b91c1c">LOCKED</div><div class="alf-trial-lock"><b>Masa trial 7 hari telah berakhir.</b><br>Aplikasi tidak dapat digunakan sebelum lisensi diaktifkan.</div><input id="alfLicenseKey" placeholder="License Key"><input id="alfProfilNama" placeholder="Nama CV / perusahaan"><input id="alfProfilAlamat" placeholder="Alamat"><label class="sub" style="display:block;margin:8px 0 4px">Logo Perusahaan (opsional, PNG/JPG/WEBP/SVG, maks 1.5MB)</label><input id="alfProfilLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><div id="alfTrialError" class="alf-trial-error"></div><button onclick="alfActivateLicense()">Aktifkan Lisensi</button>';return false;
+  }
+  function alfReadFileAsDataUrl(file){
+    return new Promise((resolve,reject)=>{
+      if(!file){resolve(null);return;}
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=()=>reject(new Error('Gagal membaca file logo.'));
+      reader.readAsDataURL(file);
+    });
+  }
+  window.alfActivateLicense=async function(){const e=document.getElementById('alfTrialError'),key=(document.getElementById('alfLicenseKey')?.value||'').trim();if(e)e.textContent='';try{const logoFile=document.getElementById('alfProfilLogo')?.files?.[0]||null;const logo=await alfReadFileAsDataUrl(logoFile);await api.license.activate(key,{nama:(document.getElementById('alfProfilNama')?.value||'').trim(),alamat:(document.getElementById('alfProfilAlamat')?.value||'').trim(),logo});await applyBranding();document.getElementById('alfastecTrialOverlay')?.remove();document.getElementById('alfastecLoginOverlay').style.display='flex';}catch(err){if(e)e.textContent=err.message||'Aktivasi gagal.';}};
+
+  async function applyBranding(){
+    try{
+      const b=await api.branding.get();
+      if(!b) return;
+      if(b.name){
+        document.title=b.name+' — Sistem Manajemen Proyek';
+        const h1t=document.getElementById('alfBrandH1Trial'); if(h1t) h1t.textContent=b.name;
+        const h1l=document.getElementById('alfBrandH1Login'); if(h1l) h1l.textContent=b.name;
+        const sn=document.getElementById('alfBrandSidebarName'); if(sn) sn.textContent=b.name;
+        window.ALF_BRAND_NAME=b.name;
+      }
+      if(b.logo){
+        const sl=document.getElementById('alfBrandSidebarLogo');
+        if(sl) sl.innerHTML='<img src="'+b.logo+'" alt="logo" style="width:100%;height:100%;object-fit:contain">';
+        window.ALF_BRAND_LOGO=b.logo;
+      }
+    }catch(e){ /* branding opsional, abaikan jika gagal dimuat */ }
+  }
+  window.ALF_BRAND_NAME='ALFASTEC';
+  window.ALF_BRAND_LOGO=null;
+
+  async function bootAuth(){
+    const st=await api.auth.status();
+    document.getElementById('alfFirstAdmin').style.display=st.hasAdmin?'none':'block';
+    document.getElementById('alfLoginForm').style.display=st.hasAdmin?'block':'none';
+    if(!st.hasAdmin){
+      document.getElementById('alfLoginForm').style.display='none';
+    }
+  }
+
+  window.alfCreateAdmin=async function(){
+    const u=document.getElementById('alfSetupUser').value.trim();
+    const p=document.getElementById('alfSetupPass').value;
+    const p2=document.getElementById('alfSetupPass2').value;
+    const sq=document.getElementById('alfSetupSecQ').value.trim();
+    const sa=document.getElementById('alfSetupSecA').value;
+    const e=document.getElementById('alfLoginError');
+    e.textContent='';
+    if(p!==p2){e.textContent='Konfirmasi password tidak sama.';return;}
+    try{
+      currentUser=await api.auth.createAdmin(u,p,sq,sa);
+      document.getElementById('alfastecLoginOverlay').remove();
+    }catch(err){e.textContent=err.message||'Gagal membuat administrator.';}
+  };
+
+  window.alfLogin=async function(){
+    const u=document.getElementById('alfUser').value.trim();
+    const p=document.getElementById('alfPass').value;
+    const e=document.getElementById('alfLoginError');
+    e.textContent='';
+    try{
+      currentUser=await api.auth.login(u,p);
+      document.getElementById('alfastecLoginOverlay').remove();
+    }catch(err){e.textContent=err.message||'Login gagal.';}
+  };
+
+  window.alfShowForgot=function(){
+    document.getElementById('alfLoginError').textContent='';
+    document.getElementById('alfLoginForm').style.display='none';
+    document.getElementById('alfForgotForm').style.display='block';
+    document.getElementById('alfForgotQuestionBox').style.display='none';
+  };
+  window.alfShowLogin=function(){
+    document.getElementById('alfLoginError').textContent='';
+    document.getElementById('alfForgotForm').style.display='none';
+    document.getElementById('alfLoginForm').style.display='block';
+  };
+  window.alfForgotFindQuestion=async function(){
+    const u=document.getElementById('alfForgotUser').value.trim();
+    const e=document.getElementById('alfLoginError');
+    e.textContent='';
+    try{
+      const q=await api.auth.securityQuestion(u);
+      document.getElementById('alfForgotQuestionText').textContent=q;
+      document.getElementById('alfForgotQuestionBox').style.display='block';
+    }catch(err){e.textContent=err.message||'Akun tidak ditemukan.';}
+  };
+  window.alfForgotReset=async function(){
+    const u=document.getElementById('alfForgotUser').value.trim();
+    const ans=document.getElementById('alfForgotAnswer').value;
+    const np=document.getElementById('alfForgotNewPass').value;
+    const np2=document.getElementById('alfForgotNewPass2').value;
+    const e=document.getElementById('alfLoginError');
+    e.textContent='';
+    if(np!==np2){e.textContent='Konfirmasi password baru tidak sama.';return;}
+    try{
+      await api.auth.resetPassword(u,ans,np);
+      alert('Password berhasil direset. Silakan masuk dengan password baru.');
+      document.getElementById('alfForgotAnswer').value='';
+      document.getElementById('alfForgotNewPass').value='';
+      document.getElementById('alfForgotNewPass2').value='';
+      alfShowLogin();
+    }catch(err){e.textContent=err.message||'Gagal mereset password.';}
+  };
+
+  window.alfSupport=function(){
+    api.support.whatsapp('Assalamualaikum mohon bantu untuk solusi ...');
+  };
+
+  window.addEventListener('load',async()=>{await applyBranding();const ok=await bootTrialGate();if(ok)await bootAuth();});
+})();
+</script>
+<script>
+/* Helper bersama untuk Kalkulator Persentase & Invoice.
+   Didefinisikan ulang di sini (bukan bergantung pada modul Payroll di atas)
+   karena const di dalam IIFE modul Payroll tidak bisa diakses dari script block ini. */
+const readArr=k=>{try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}};
+const saveArr=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const fmt=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const safe=s=>typeof esc==='function'?esc(s):String(s??'');
+const uid2=p=>p+"_"+Date.now()+"_"+Math.random().toString(36).slice(2,7);
+
+window.calculatePercent=function(){
+ const base=window.ALFASTEC_RUPIAH?window.ALFASTEC_RUPIAH.number(document.getElementById('pctBase')):(+document.getElementById('pctBase').value||0), rate=Math.min(100,Math.max(0,+document.getElementById('pctRate').value||0)), val=base*rate/100, rem=base-val;
+ document.getElementById('pctValue').textContent=fmt(val);document.getElementById('pctRemain').textContent=fmt(rem);document.getElementById('pctRemainRate').textContent=(100-rate).toFixed(2)+'%';
+ return {base,rate,val,rem};
+};
+window.savePercentCalc=function(){
+ const r=calculatePercent();if(r.base<=0)return alert('Masukkan nilai proyek.');
+ let d=readArr('alfastec_percent_history');d.push({id:uid2('PCT'),date:new Date().toLocaleDateString('id-ID'),name:pctName.value.trim(),type:pctType.value,base:r.base,rate:r.rate,value:r.val,remain:r.rem});saveArr('alfastec_percent_history',d);renderPercentHistory();
+};
+function renderPercentHistory(){const d=readArr('alfastec_percent_history');document.getElementById('pctHistory').innerHTML=d.slice().reverse().map(x=>`<tr><td>${safe(x.date)}</td><td>${safe(x.name||x.type||'-')}</td><td>${fmt(x.base)}</td><td>${x.rate}%</td><td>${fmt(x.value)}</td><td>${fmt(x.remain)}</td></tr>`).join('')||'<tr><td colspan="6">Belum ada riwayat.</td></tr>'}
+
+function newInvoice(){
+ invoiceEdit=null; const today=new Date().toISOString().slice(0,10);
+ invNumber.value='INV-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-5);invDate.value=today;invDue.value='';invStatus.value='Draft';
+ ['invCustomer','invPhone','invEmail','invAddress','invDescription','invNote'].forEach(id=>document.getElementById(id).value='');
+ invQty.value=1;invPrice.value=0;invDiscount.value=0;invTax.value=0;invoiceFormTitle.textContent='Invoice Baru';renderInvoices();renderInvoicePreview();
+}
+function invoiceAmount(x){let sub=(+x.qty||0)*(+x.price||0),disc=+x.discount||0,tax=Math.max(0,sub-disc)*(+x.tax||0)/100;return {sub,disc,tax,total:Math.max(0,sub-disc)+tax}}
+function renderInvoices(){const d=readArr('alfastec_invoices');invoiceList.innerHTML=d.slice().reverse().map(x=>`<div class="invoice-card" onclick="editInvoice('${x.id}')"><b>${safe(x.number)}</b><div>${safe(x.customer||'-')}</div><div class="muted">${safe(x.status)} · ${fmt(invoiceAmount(x).total)}</div></div>`).join('')||'<div class="muted">Belum ada invoice.</div>'}
+window.newInvoice=newInvoice;
+window.editInvoice=function(id){const x=readArr('alfastec_invoices').find(z=>z.id===id);if(!x)return;invoiceEdit=id;['number','date','due','status','customer','phone','email','address','description','qty','price','discount','tax','note'].forEach(k=>document.getElementById('inv'+k[0].toUpperCase()+k.slice(1)).value=x[k]??'');invoiceFormTitle.textContent='Edit Invoice '+x.number;renderInvoicePreview()};
+window.saveInvoice=function(){if(!invCustomer.value.trim()||!invDescription.value.trim())return alert('Pelanggan dan uraian tagihan wajib diisi.');let d=readArr('alfastec_invoices'),x={id:invoiceEdit||uid2('INV'),number:invNumber.value.trim(),date:invDate.value,due:invDue.value,status:invStatus.value,customer:invCustomer.value.trim(),phone:invPhone.value.trim(),email:invEmail.value.trim(),address:invAddress.value.trim(),description:invDescription.value.trim(),qty:+invQty.value||0,price:window.ALFASTEC_RUPIAH?window.ALFASTEC_RUPIAH.number(invPrice):(+invPrice.value||0),discount:window.ALFASTEC_RUPIAH?window.ALFASTEC_RUPIAH.number(invDiscount):(+invDiscount.value||0),tax:+invTax.value||0,note:invNote.value.trim()};let i=d.findIndex(z=>z.id===x.id);if(i>=0)d[i]=x;else d.push(x);saveArr('alfastec_invoices',d);invoiceEdit=x.id;renderInvoices();renderInvoicePreview();alert('Invoice tersimpan.')};
+window.deleteInvoice=function(){if(!invoiceEdit)return alert('Pilih invoice.');if(!confirm('Hapus invoice ini?'))return;saveArr('alfastec_invoices',readArr('alfastec_invoices').filter(x=>x.id!==invoiceEdit));newInvoice()};
+function renderInvoicePreview(){const box=document.getElementById('invoicePreview');const x=readArr('alfastec_invoices').find(z=>z.id===invoiceEdit)||{number:invNumber?.value,date:invDate?.value,due:invDue?.value,status:invStatus?.value,customer:invCustomer?.value,phone:invPhone?.value,email:invEmail?.value,address:invAddress?.value,description:invDescription?.value,qty:+(invQty?.value||0),price:+(invPrice?.value||0),discount:+(invDiscount?.value||0),tax:+(invTax?.value||0),note:invNote?.value};const a=invoiceAmount(x);box.innerHTML=`<div class="slip-head"><h2>INVOICE / TAGIHAN</h2><p>${safe(window.ALF_BRAND_NAME||'ALFASTEC')}</p><p><b>${safe(x.number||'-')}</b></p></div><div class="summary"><div><b>Tagihan Kepada</b><br>${safe(x.customer||'-')}<br>${safe(x.address||'')}</div><div><b>Tanggal</b><br>${safe(x.date||'-')}<br><b>Jatuh Tempo</b><br>${safe(x.due||'-')}<br>Status: ${safe(x.status||'-')}</div></div><table class="slip-table" style="margin-top:18px"><tr><td><b>Uraian</b></td><td>Jumlah</td><td>Harga</td><td>Total</td></tr><tr><td>${safe(x.description||'-')}</td><td>${x.qty||0}</td><td>${fmt(x.price)}</td><td>${fmt(a.sub)}</td></tr><tr><td colspan="3">Subtotal</td><td>${fmt(a.sub)}</td></tr><tr><td colspan="3">Diskon</td><td>-${fmt(a.disc)}</td></tr><tr><td colspan="3">Pajak ${x.tax||0}%</td><td>${fmt(a.tax)}</td></tr></table><div class="invoice-total">TOTAL: ${fmt(a.total)}</div><p class="muted">${safe(x.note||'')}</p>`}
+window.printInvoice=function(){renderInvoicePreview();let h=document.getElementById('invoicePreview').innerHTML,w=window.open('','_blank');if(!w)return alert('Popup diblokir browser.');w.document.write(`<html><head><title>Invoice</title><style>body{font:14px Arial;padding:35px}.slip-head{text-align:center;border-bottom:2px solid #111;padding-bottom:10px}.summary{display:grid;grid-template-columns:1fr 1fr;gap:20px}.slip-table{width:100%;border-collapse:collapse;margin-top:15px}.slip-table td{padding:8px;border-bottom:1px solid #ddd}.invoice-total{text-align:right;font-size:22px;font-weight:bold;margin-top:15px}</style></head><body>${h}</body></html>`);w.document.close();w.print()};
+
+window.addEventListener('load',()=>{renderPayEmployees();newPayroll();renderPercentHistory();newInvoice();renderInvoices()});
+
+/* ===== FORMAT RUPIAH PADA FIELD NOMINAL ===== */
+(function(){
+  function rupiah(n){
+    n = Number(n)||0;
+    return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);
+  }
+  function formatInput(el){
+    if(!el) return;
+    let raw = el.value.replace(/[^\d]/g,'');
+    if(raw) el.value = rupiah(Number(raw)).replace(/\s/g,'');
+  }
+  function rawNumber(el){
+    if(!el) return 0;
+    return Number(String(el.value).replace(/[^\d]/g,''))||0;
+  }
+
+  // Field yang secara langsung berisi nilai uang.
+  const moneyIds = [
+    'pctBase','payBasic','payAllowance','payBonus','payOvertime','payDeduction',
+    'invPrice','invDiscount'
+  ];
+
+  function attachMoney(id){
+    const el=document.getElementById(id);
+    if(!el || el.dataset.rupiahAttached) return;
+    el.dataset.rupiahAttached='1';
+    el.type='text';
+    el.inputMode='numeric';
+    el.placeholder='Rp 0';
+    el.addEventListener('focus',function(){
+      let n=rawNumber(this);
+      this.value=n?String(n):'';
+    });
+    el.addEventListener('input',function(){
+      this.value=this.value.replace(/[^\d]/g,'');
+    });
+    el.addEventListener('blur',function(){formatInput(this)});
+  }
+
+  function attachAll(){
+    moneyIds.forEach(attachMoney);
+    // Field proyek/RAB yang sudah ada: nominal proyek bila ID-nya ditemukan.
+    ['projectValue','projectBudget','nilaiProyek','projectAmount','budgetProject'].forEach(attachMoney);
+  }
+
+  window.ALFASTEC_RUPIAH={
+    number:rawNumber,
+    format:function(id){
+      const e=document.getElementById(id); if(e) formatInput(e);
+    }
+  };
+
+  window.addEventListener('load',attachAll);
+
+  // Pastikan field baru yang dibuat modul lain ikut terformat.
+  const observer=new MutationObserver(attachAll);
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    ['payBasic','payAllowance','payBonus','payOvertime','payDeduction','invPrice','invDiscount','pctBase'].forEach(id=>{
+      const e=document.getElementById(id);
+      if(e && e.value) e.dispatchEvent(new Event('blur'));
+    });
+  },300);
+});
+
+/* ===== ALFASTEC - KWITANSI MANUAL ===== */
+(function(){
+  "use strict";
+
+  const KEY = "alfastec_receipts";
+  let receiptEdit = null;
+
+  function arr(){
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch(e){ return []; }
+  }
+  function save(v){ localStorage.setItem(KEY, JSON.stringify(v)); }
+  function uid(){ return "RCPT_"+Date.now()+"_"+Math.random().toString(36).slice(2,7); }
+  function esc(v){
+    return String(v ?? "").replace(/[&<>'"]/g,c=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"
+    }[c]));
+  }
+  function money(n){
+    return "Rp "+(Number(n)||0).toLocaleString("id-ID");
+  }
+  function terbilang(n){
+    n=Math.floor(Math.abs(Number(n)||0));
+    const a=["","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan","sepuluh","sebelas"];
+    function f(x){
+      if(x<12) return a[x];
+      if(x<20) return f(x-10)+" belas";
+      if(x<100) return f(Math.floor(x/10))+" puluh"+(x%10?" "+f(x%10):"");
+      if(x<200) return "seratus"+(x%100?" "+f(x%100):"");
+      if(x<1000) return f(Math.floor(x/100))+" ratus"+(x%100?" "+f(x%100):"");
+      if(x<2000) return "seribu"+(x%1000?" "+f(x%1000):"");
+      if(x<1000000) return f(Math.floor(x/1000))+" ribu"+(x%1000?" "+f(x%1000):"");
+      if(x<1000000000) return f(Math.floor(x/1000000))+" juta"+(x%1000000?" "+f(x%1000000):"");
+      if(x<1000000000000) return f(Math.floor(x/1000000000))+" miliar"+(x%1000000000?" "+f(x%1000000000):"");
+      return f(Math.floor(x/1000000000000))+" triliun"+(x%1000000000000?" "+f(x%1000000000000):"");
+    }
+    return (f(n)||"nol")+" rupiah";
+  }
+  function rawAmount(){
+    const el=document.getElementById("rcAmount");
+    if(!el) return 0;
+    if(window.ALFASTEC_RUPIAH && window.ALFASTEC_RUPIAH.number) return window.ALFASTEC_RUPIAH.number(el);
+    return Number(String(el.value||"").replace(/[^\d]/g,""))||0;
+  }
+  function formatAmount(){
+    const el=document.getElementById("rcAmount");
+    if(!el) return;
+    const n=rawAmount();
+    el.value=n ? "Rp "+n.toLocaleString("id-ID") : "";
+  }
+  function getForm(){
+    return {
+      id:receiptEdit || uid(),
+      number:document.getElementById("rcNumber").value.trim(),
+      date:document.getElementById("rcDate").value,
+      from:document.getElementById("rcFrom").value.trim(),
+      address:document.getElementById("rcAddress").value.trim(),
+      amount:rawAmount(),
+      purpose:document.getElementById("rcPurpose").value.trim(),
+      method:document.getElementById("rcMethod").value,
+      status:document.getElementById("rcStatus").value,
+      note:document.getElementById("rcNote").value.trim(),
+      receiver:document.getElementById("rcReceiver").value.trim(),
+      receiverRole:document.getElementById("rcReceiverRole").value.trim()
+    };
+  }
+  function set(id,v){ const e=document.getElementById(id); if(e)e.value=v??""; }
+
+  window.newReceipt=function(){
+    receiptEdit=null;
+    const d=new Date().toISOString().slice(0,10);
+    set("rcNumber","KW-"+new Date().getFullYear()+"-"+String(Date.now()).slice(-5));
+    set("rcDate",d);
+    ["rcFrom","rcAddress","rcPurpose","rcNote","rcReceiver","rcReceiverRole"].forEach(id=>set(id,""));
+    set("rcAmount","");
+    set("rcMethod","Tunai");
+    set("rcStatus","Lunas");
+    document.getElementById("receiptFormTitle").textContent="Kwitansi Baru";
+    renderReceipts();
+    renderReceiptPreview();
+  };
+
+  window.editReceipt=function(id){
+    const x=arr().find(z=>z.id===id);
+    if(!x)return;
+    receiptEdit=id;
+    set("rcNumber",x.number); set("rcDate",x.date); set("rcFrom",x.from);
+    set("rcAddress",x.address); set("rcAmount",money(x.amount));
+    set("rcPurpose",x.purpose); set("rcMethod",x.method); set("rcStatus",x.status);
+    set("rcNote",x.note); set("rcReceiver",x.receiver); set("rcReceiverRole",x.receiverRole);
+    document.getElementById("receiptFormTitle").textContent="Edit Kwitansi "+x.number;
+    renderReceiptPreview();
+  };
+
+  window.saveReceipt=function(){
+    const x=getForm();
+    if(!x.from || !x.amount || !x.purpose)
+      return alert("Pemberi, jumlah uang, dan tujuan pembayaran wajib diisi.");
+    let d=arr(), i=d.findIndex(z=>z.id===x.id);
+    if(i>=0)d[i]=x; else d.push(x);
+    save(d); receiptEdit=x.id;
+    renderReceipts(); renderReceiptPreview();
+    alert("Kwitansi tersimpan.");
+  };
+
+  window.deleteReceipt=function(){
+    if(!receiptEdit)return alert("Pilih kwitansi.");
+    if(!confirm("Hapus kwitansi ini?"))return;
+    save(arr().filter(x=>x.id!==receiptEdit));
+    newReceipt();
+  };
+
+  function renderReceipts(){
+    const box=document.getElementById("receiptList");
+    if(!box)return;
+    const d=arr().slice().reverse();
+    box.innerHTML=d.map(x=>`
+      <div class="receipt-card ${x.id===receiptEdit?'selected':''}" onclick="editReceipt('${esc(x.id)}')">
+        <b>${esc(x.number||"-")}</b>
+        <div>${esc(x.from||"-")}</div>
+        <div class="muted">${esc(x.status||"-")} · ${money(x.amount)}</div>
+      </div>`).join("") || '<div class="muted">Belum ada kwitansi.</div>';
+  }
+
+  function current(){
+    const saved=arr().find(z=>z.id===receiptEdit);
+    return saved || getForm();
+  }
+
+  function renderReceiptPreview(){
+    const box=document.getElementById("receiptPreview");
+    if(!box)return;
+    const x=current(), n=Number(x.amount)||0;
+    box.innerHTML=`
+      <div class="receipt-paper">
+        <div class="receipt-head">
+          <h2>KWITANSI</h2>
+          <p>${esc(window.ALF_BRAND_NAME||"ALFASTEC")}</p>
+          <p>No. ${esc(x.number||"-")}</p>
+        </div>
+        <p><b>Sudah terima dari:</b><br>${esc(x.from||"-")}</p>
+        <p><b>Alamat / Keterangan:</b><br>${esc(x.address||"-")}</p>
+        <p><b>Uang sejumlah:</b></p>
+        <div class="receipt-amount">${money(n)}</div>
+        <p><b>Terbilang:</b><br><i>${esc(terbilang(n))}</i></p>
+        <p><b>Untuk pembayaran:</b><br>${esc(x.purpose||"-")}</p>
+        <table class="slip-table" style="margin-top:18px">
+          <tr><td>Metode</td><td>${esc(x.method||"-")}</td></tr>
+          <tr><td>Status</td><td>${esc(x.status||"-")}</td></tr>
+          <tr><td>Tanggal</td><td>${esc(x.date||"-")}</td></tr>
+          ${x.note?`<tr><td>Catatan</td><td>${esc(x.note)}</td></tr>`:""}
+        </table>
+        <div class="receipt-sign">
+          <div><div>Penerima,</div><div class="line">${esc(x.receiver||"Nama Penerima")}<br>${esc(x.receiverRole||"")}</div></div>
+          <div><div>Pembayar,</div><div class="line">${esc(x.from||"Nama Pembayar")}</div></div>
+        </div>
+      </div>`;
+  }
+
+  window.printReceipt=function(){
+    renderReceiptPreview();
+    const h=document.getElementById("receiptPreview").innerHTML;
+    const w=window.open("","_blank");
+    if(!w)return alert("Popup diblokir browser.");
+    w.document.write(`<html><head><title>Kwitansi ${esc(document.getElementById("rcNumber").value)}</title>
+      <style>
+      @page{size:A4;margin:15mm}body{font:14px Arial,sans-serif;padding:20px;color:#111827}
+      .receipt-paper{max-width:760px;margin:auto;border:1px solid #111827;padding:34px}
+      .receipt-head{text-align:center;border-bottom:2px solid #111827;padding-bottom:14px;margin-bottom:20px}
+      .receipt-head h2{margin:0;font-size:24px}.receipt-head p{margin:5px 0;color:#475569}
+      .receipt-amount{font-size:25px;font-weight:900;text-align:center;margin:20px 0;padding:15px;border:2px dashed #111827;border-radius:8px}
+      .slip-table{width:100%;border-collapse:collapse;margin-top:15px}.slip-table td{padding:8px;border-bottom:1px solid #ddd}
+      .receipt-sign{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:45px;text-align:center}
+      .receipt-sign .line{border-top:1px solid #111827;margin-top:55px;padding-top:7px}
+      </style></head><body>${h}</body></html>`);
+    w.document.close(); w.focus(); setTimeout(()=>w.print(),150);
+  };
+
+  window.addEventListener("load",()=>{
+    const amount=document.getElementById("rcAmount");
+    if(amount){
+      amount.addEventListener("focus",()=>{const n=rawAmount();amount.value=n?String(n):"";});
+      amount.addEventListener("input",()=>{amount.value=amount.value.replace(/[^\d]/g,"");});
+      amount.addEventListener("blur",formatAmount);
+      amount.addEventListener("input",renderReceiptPreview);
+    }
+    newReceipt();
+    renderReceipts();
+  });
+})();
+
+</script></body></html>
