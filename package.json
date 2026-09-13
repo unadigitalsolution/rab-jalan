@@ -12,7 +12,7 @@
     "audit": "npm audit --audit-level=high",
     "test": "node tests/smoke-test.js",
     "reset-admin": "node tools/reset-admin.js",
-    ""build": "electron-builder --publish never",
+    "build": "electron-builder --publish never",
     "security-check": "node tests/security-check.js"
   },
   "dependencies": {
