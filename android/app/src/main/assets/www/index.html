@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ALFASTEC</title>
+<style>
+:root{--bg:#f8fafc;--card:#ffffff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--brand:#0f172a;--accent:#2563eb;--danger:#dc2626;--ok:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Roboto,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--brand);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+header h1{font-size:17px;margin:0}
+header .sync-dot{width:9px;height:9px;border-radius:50%;background:#94a3b8;display:inline-block;margin-right:6px}
+header .sync-dot.on{background:var(--ok)}
+header .sync-dot.off{background:var(--danger)}
+main{padding:14px 14px 90px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{font-size:15px;margin:0 0 10px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.field input,.field select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:#fff}
+.btn{display:inline-block;width:100%;padding:13px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:600;text-align:center}
+.btn.secondary{background:#eef2ff;color:var(--accent)}
+.btn.danger{background:#fef2f2;color:var(--danger)}
+.btn.small{width:auto;padding:8px 12px;font-size:13px}
+.muted{color:var(--muted);font-size:13px}
+.err{color:var(--danger);font-size:13px;margin-top:8px}
+.ok{color:var(--ok);font-size:13px;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
+.tabbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;z-index:5}
+.tabbar button{flex:1;border:0;background:none;padding:10px 4px;font-size:11px;color:var(--muted)}
+.tabbar button.active{color:var(--accent);font-weight:700}
+.page{display:none}
+.page.active{display:block}
+.row{display:flex;gap:8px}
+.row .btn{flex:1}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;background:#eef2ff;color:var(--accent)}
+.pill.dirty{background:#fff7ed;color:#c2410c}
+.list-item{padding:12px 0;border-bottom:1px solid var(--line)}
+.list-item:last-child{border-bottom:0}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="hdrTitle">ALFASTEC</h1>
+  <div><span class="sync-dot" id="syncDot"></span><span class="muted" id="syncLabel" style="color:#cbd5e1">-</span></div>
+</header>
+
+<main>
+
+<!-- ===== LOGIN / PAIRING ===== -->
+<section id="page-login" class="page">
+  <div class="card">
+    <h2>Masuk ke Server ALFASTEC</h2>
+    <p class="muted">Pastikan HP dan komputer PC terhubung ke WiFi yang sama. Alamat server bisa dilihat di PC pada menu "Sinkron Android".</p>
+    <div class="field"><label>Alamat IP Server (PC)</label><input id="loginIp" placeholder="contoh: 192.168.1.5" inputmode="decimal"></div>
+    <div class="field"><label>Username</label><input id="loginUser" autocapitalize="none"></div>
+    <div class="field"><label>Password</label><input id="loginPass" type="password"></div>
+    <button class="btn" id="loginBtn" onclick="onLoginSubmit()">Masuk</button>
+    <div id="loginMsg"></div>
+  </div>
+</section>
+
+<!-- ===== DASHBOARD ===== -->
+<section id="page-dashboard" class="page">
+  <div class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 style="flex:1">Proyek Saya</h2>
+      <button class="btn small secondary" onclick="syncNowUi()">Sinkron</button>
+    </div>
+    <p class="muted" id="syncMeta">Belum pernah sinkron.</p>
+    <div id="projectList"><p class="muted">Belum ada proyek.</p></div>
+  </div>
+  <button class="btn" onclick="startNewProject()">+ Proyek Baru</button>
+  <div class="card" style="margin-top:14px">
+    <h2>Menu Lainnya</h2>
+    <div class="row" style="flex-wrap:wrap;gap:8px">
+      <button class="btn small secondary" style="flex:1 1 45%" onclick="go('employees')">👤 Karyawan</button>
+      <button class="btn small secondary" style="flex:1 1 45%" onclick="go('payroll')">💰 Payroll</button>
+      <button class="btn small secondary" style="flex:1 1 45%" onclick="go('percent')">％ Kalkulator %</button>
+      <button class="btn small secondary" style="flex:1 1 45%" onclick="go('invoices')">🧾 Invoice</button>
+      <button class="btn small secondary" style="flex:1 1 100%" onclick="go('receipts')">📄 Kwitansi Manual</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUAT PROYEK ===== -->
+<section id="page-create" class="page">
+  <div class="card">
+    <h2>1. Data Proyek</h2>
+    <div class="field"><label>Nama Proyek</label><input id="pn" placeholder="Nama proyek"></div>
+    <div class="field"><label>Lokasi</label><input id="pl" placeholder="Lokasi proyek"></div>
+    <div class="field"><label>Tahun</label><select id="py"><option>2026</option><option>2027</option></select></div>
+    <div class="field"><label>Jenis Proyek</label><select id="ptype">
+      <option>Peningkatan Jalan</option><option>Rehabilitasi Jalan</option>
+      <option>Pembangunan Jalan</option><option>Pemeliharaan Jalan</option>
+    </select></div>
+    <button class="btn" onclick="saveProjectStep()">Simpan & Lanjut ke Data Jalan</button>
+  </div>
+</section>
+
+<!-- ===== DATA JALAN ===== -->
+<section id="page-road" class="page">
+  <div class="card">
+    <h2>2. Data Jalan</h2>
+    <div class="field"><label>Panjang Ruas (km)</label><input id="roadLength" type="number" min="0" step="0.001"></div>
+    <div class="field"><label>Catatan Ruas</label><input id="roadNote" placeholder="Contoh: STA 0+000 s.d. STA 1+250"></div>
+    <div class="field"><label>Lebar Jalan (m)</label><input id="roadWidth" type="number" min="0" step="0.01"></div>
+    <div class="field"><label>Lebar Bahu Jalan (m)</label><input id="shoulderWidth" type="number" min="0" step="0.01"></div>
+    <div class="field"><label>Jenis Perkerasan</label><select id="pavement">
+      <option>Aspal</option><option>Beton</option><option>Agregat</option><option>Tanah</option>
+    </select></div>
+    <div class="field"><label>Kondisi Eksisting</label><select id="condition">
+      <option>Baik</option><option>Rusak Ringan</option><option>Rusak Sedang</option><option>Rusak Berat</option>
+    </select></div>
+    <button class="btn" onclick="saveRoadStep()">Simpan & Lanjut ke RAB/BOQ</button>
+  </div>
+</section>
+
+<!-- ===== RAB / BOQ ===== -->
+<section id="page-rab" class="page">
+  <div class="card">
+    <h2>3. RAB / BOQ</h2>
+    <p class="muted" id="rabProjectLabel"></p>
+    <div class="field"><label>Uraian Pekerjaan</label><input id="boqName" placeholder="Contoh: Pekerjaan Lapis Pondasi Agregat"></div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>Volume</label><input id="boqVolume" type="number" min="0" step="0.01"></div>
+      <div class="field" style="flex:1"><label>Satuan</label><input id="boqUnit" placeholder="m³ / m² / m'"></div>
+    </div>
+    <div class="field"><label>Harga Satuan (Rp)</label><input id="boqPrice" type="number" min="0" step="100"></div>
+    <button class="btn secondary" onclick="addBoqItem()">+ Tambah Item</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Uraian</th><th>Vol.</th><th>Jumlah</th><th></th></tr></thead><tbody id="boqTable"></tbody></table>
+    <div style="text-align:right;margin-top:10px"><span class="muted">Total RAB</span><div style="font-size:20px;font-weight:700" id="boqTotal">Rp 0</div></div>
+  </div>
+  <button class="btn" onclick="go('dashboard')">Selesai, Kembali ke Dashboard</button>
+</section>
+
+<!-- ===== KARYAWAN ===== -->
+<section id="page-employees" class="page">
+  <div class="card"><button class="btn small secondary" onclick="go('dashboard')">← Kembali</button></div>
+  <div class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 style="flex:1">Karyawan</h2>
+      <button class="btn small" onclick="newEmployee()">+ Baru</button>
+    </div>
+    <div id="employeeList"><p class="muted">Belum ada karyawan.</p></div>
+  </div>
+  <div class="card">
+    <h2 id="employeeFormTitle">Tambah Karyawan</h2>
+    <div class="field"><label>ID / NIK Karyawan</label><input id="empId"></div>
+    <div class="field"><label>Nama Lengkap</label><input id="empName"></div>
+    <div class="field"><label>Jabatan</label><select id="empPosition">
+      <option>Administrator</option><option>Project Manager</option><option>Site Engineer</option>
+      <option>Surveyor</option><option>Estimator</option><option>Drafter</option>
+      <option>Pelaksana</option><option>Operator</option>
+    </select></div>
+    <div class="field"><label>Divisi / Bagian</label><input id="empDivision"></div>
+    <div class="field"><label>Nomor HP</label><input id="empPhone"></div>
+    <div class="field"><label>Email</label><input id="empEmail" type="email"></div>
+    <div class="field"><label>Status</label><select id="empStatus"><option>Aktif</option><option>Nonaktif</option></select></div>
+    <div class="field"><label>Tanggal Bergabung</label><input id="empJoin" type="date"></div>
+    <div class="field"><label>Keahlian</label><input id="empSkill" placeholder="Contoh: Survey, Estimasi, Pengawasan"></div>
+    <div class="field"><label>Keterangan</label><input id="empNote"></div>
+    <div class="row">
+      <button class="btn danger" onclick="deleteEmployee()">Hapus</button>
+      <button class="btn secondary" onclick="newEmployee()">Batal</button>
+    </div>
+    <button class="btn" style="margin-top:8px" onclick="saveEmployee()">Simpan Karyawan</button>
+  </div>
+</section>
+
+<!-- ===== PAYROLL ===== -->
+<section id="page-payroll" class="page">
+  <div class="card"><button class="btn small secondary" onclick="go('dashboard')">← Kembali</button></div>
+  <div class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 style="flex:1">Payroll & Slip Gaji</h2>
+      <button class="btn small" onclick="newPayroll()">+ Baru</button>
+    </div>
+    <div id="payrollList"><p class="muted">Belum ada data.</p></div>
+  </div>
+  <div class="card">
+    <h2 id="payFormTitle">Pembayaran Gaji</h2>
+    <div class="field"><label>Karyawan</label><select id="payEmployee"></select></div>
+    <div class="field"><label>Periode</label><input id="payPeriod" type="month"></div>
+    <div class="field"><label>Gaji Pokok</label><input id="payBasic" type="number" min="0" value="0"></div>
+    <div class="field"><label>Tunjangan</label><input id="payAllowance" type="number" min="0" value="0"></div>
+    <div class="field"><label>Bonus / Insentif</label><input id="payBonus" type="number" min="0" value="0"></div>
+    <div class="field"><label>Lembur</label><input id="payOvertime" type="number" min="0" value="0"></div>
+    <div class="field"><label>Potongan</label><input id="payDeduction" type="number" min="0" value="0"></div>
+    <div class="field"><label>Metode Pembayaran</label><select id="payMethod"><option>Transfer Bank</option><option>Tunai</option><option>E-Wallet</option></select></div>
+    <div class="field"><label>Status</label><select id="payStatus"><option>Dibayar</option><option>Belum Dibayar</option></select></div>
+    <div class="field"><label>Tanggal Bayar</label><input id="payDate" type="date"></div>
+    <div class="field"><label>Keterangan</label><input id="payNote"></div>
+    <div class="row">
+      <button class="btn danger" onclick="deletePayroll()">Hapus</button>
+      <button class="btn secondary" onclick="newPayroll()">Batal</button>
+    </div>
+    <button class="btn" style="margin-top:8px" onclick="savePayroll()">Simpan Pembayaran</button>
+  </div>
+  <div class="card">
+    <h2>Slip Gaji</h2>
+    <div id="payslipPreview" class="muted">Pilih data pembayaran untuk melihat slip gaji.</div>
+  </div>
+</section>
+
+<!-- ===== KALKULATOR PERSENTASE ===== -->
+<section id="page-percent" class="page">
+  <div class="card"><button class="btn small secondary" onclick="go('dashboard')">← Kembali</button></div>
+  <div class="card">
+    <h2>Kalkulator Persentase Proyek</h2>
+    <p class="muted">Hitung nilai persentase dari nilai proyek dan sisa nilainya.</p>
+    <div class="field"><label>Nilai Proyek</label><input id="pctBase" type="number" min="0" step="0.01" placeholder="Contoh: 1000000000"></div>
+    <div class="field"><label>Persentase (%)</label><input id="pctRate" type="number" min="0" max="100" step="0.01" value="15"></div>
+    <div class="field"><label>Nama Proyek / Keterangan</label><input id="pctName" placeholder="Contoh: Proyek Jalan Desa"></div>
+    <div class="field"><label>Jenis Perhitungan</label><select id="pctType"><option>Potongan / Fee</option><option>Uang Muka</option><option>Progress</option><option>Keuntungan</option><option>Cadangan</option><option>Lainnya</option></select></div>
+    <div class="row">
+      <button class="btn secondary" onclick="calculatePercent()">Hitung</button>
+      <button class="btn" onclick="savePercentCalc()">Simpan</button>
+    </div>
+    <div style="margin-top:14px">
+      <div class="field"><span class="muted">Nilai Persentase</span><div style="font-size:18px;font-weight:700" id="pctValue">Rp 0</div></div>
+      <div class="field"><span class="muted">Sisa Nilai</span><div style="font-size:18px;font-weight:700" id="pctRemain">Rp 0</div></div>
+      <div class="field"><span class="muted">Persentase Sisa</span><div style="font-size:18px;font-weight:700" id="pctRemainRate">100%</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Riwayat Perhitungan</h2>
+    <table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Nilai</th><th>%</th><th>Hasil</th></tr></thead><tbody id="pctHistory"></tbody></table>
+  </div>
+</section>
+
+<!-- ===== INVOICE ===== -->
+<section id="page-invoices" class="page">
+  <div class="card"><button class="btn small secondary" onclick="go('dashboard')">← Kembali</button></div>
+  <div class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 style="flex:1">Invoice Manual</h2>
+      <button class="btn small" onclick="newInvoice()">+ Baru</button>
+    </div>
+    <div id="invoiceList"><p class="muted">Belum ada invoice.</p></div>
+  </div>
+  <div class="card">
+    <h2 id="invoiceFormTitle">Invoice Baru</h2>
+    <div class="field"><label>No. Invoice</label><input id="invNumber"></div>
+    <div class="field"><label>Tanggal</label><input id="invDate" type="date"></div>
+    <div class="field"><label>Jatuh Tempo</label><input id="invDue" type="date"></div>
+    <div class="field"><label>Status</label><select id="invStatus"><option>Draft</option><option>Belum Dibayar</option><option>Dibayar Sebagian</option><option>Lunas</option><option>Jatuh Tempo</option></select></div>
+    <div class="field"><label>Nama Pelanggan / Instansi</label><input id="invCustomer"></div>
+    <div class="field"><label>No. HP / Kontak</label><input id="invPhone"></div>
+    <div class="field"><label>Email</label><input id="invEmail" type="email"></div>
+    <div class="field"><label>Alamat</label><input id="invAddress"></div>
+    <div class="field"><label>Uraian Tagihan</label><input id="invDescription" placeholder="Jasa, barang, pekerjaan, konsultasi, dll."></div>
+    <div class="field"><label>Jumlah</label><input id="invQty" type="number" min="0" step=".01" value="1" oninput="renderInvoicePreview()"></div>
+    <div class="field"><label>Harga Satuan</label><input id="invPrice" type="number" min="0" value="0" oninput="renderInvoicePreview()"></div>
+    <div class="field"><label>Diskon</label><input id="invDiscount" type="number" min="0" value="0" oninput="renderInvoicePreview()"></div>
+    <div class="field"><label>Pajak (%)</label><input id="invTax" type="number" min="0" step=".01" value="0" oninput="renderInvoicePreview()"></div>
+    <div class="field"><label>Catatan / Syarat Pembayaran</label><input id="invNote"></div>
+    <div class="row">
+      <button class="btn danger" onclick="deleteInvoice()">Hapus</button>
+      <button class="btn secondary" onclick="newInvoice()">Batal</button>
+    </div>
+    <button class="btn" style="margin-top:8px" onclick="saveInvoice()">Simpan Invoice</button>
+  </div>
+  <div class="card">
+    <h2>Total</h2>
+    <div id="invoicePreview" class="muted">Isi form invoice untuk melihat total.</div>
+  </div>
+</section>
+
+<!-- ===== KWITANSI MANUAL ===== -->
+<section id="page-receipts" class="page">
+  <div class="card"><button class="btn small secondary" onclick="go('dashboard')">← Kembali</button></div>
+  <div class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 style="flex:1">Kwitansi Manual</h2>
+      <button class="btn small" onclick="newReceipt()">+ Baru</button>
+    </div>
+    <div id="receiptList"><p class="muted">Belum ada kwitansi.</p></div>
+  </div>
+  <div class="card">
+    <h2 id="receiptFormTitle">Kwitansi Baru</h2>
+    <div class="field"><label>No. Kwitansi</label><input id="rcNumber"></div>
+    <div class="field"><label>Tanggal</label><input id="rcDate" type="date"></div>
+    <div class="field"><label>Sudah Terima Dari</label><input id="rcFrom" placeholder="Nama pelanggan / instansi"></div>
+    <div class="field"><label>Alamat / Keterangan Pemberi</label><input id="rcAddress"></div>
+    <div class="field"><label>Uang Sejumlah</label><input id="rcAmount" type="text" inputmode="numeric" placeholder="Rp 0" oninput="formatRcAmount()"></div>
+    <div class="field"><label>Untuk Pembayaran</label><input id="rcPurpose" placeholder="Contoh: Pembayaran jasa, material, DP pekerjaan, dll."></div>
+    <div class="field"><label>Metode Pembayaran</label><select id="rcMethod"><option>Tunai</option><option>Transfer Bank</option><option>E-Wallet</option><option>Lainnya</option></select></div>
+    <div class="field"><label>Status</label><select id="rcStatus"><option>Lunas</option><option>DP / Sebagian</option><option>Belum Lunas</option></select></div>
+    <div class="field"><label>Catatan</label><input id="rcNote" placeholder="Catatan tambahan / nomor referensi"></div>
+    <div class="field"><label>Nama Penerima</label><input id="rcReceiver" placeholder="Nama penerima"></div>
+    <div class="field"><label>Jabatan / Keterangan</label><input id="rcReceiverRole" placeholder="Bendahara / Admin / Penerima"></div>
+    <div class="row">
+      <button class="btn danger" onclick="deleteReceipt()">Hapus</button>
+      <button class="btn secondary" onclick="newReceipt()">Batal</button>
+    </div>
+    <button class="btn" style="margin-top:8px" onclick="saveReceipt()">Simpan Kwitansi</button>
+  </div>
+</section>
+
+</main>
+
+<nav class="tabbar" id="tabbar" style="display:none">
+  <button onclick="go('dashboard')" data-tab="dashboard">🏠<br>Dashboard</button>
+  <button onclick="startNewProject()" data-tab="create">＋<br>Proyek</button>
+  <button onclick="syncNowUi()" data-tab="sync">🔄<br>Sinkron</button>
+  <button onclick="logout()" data-tab="logout">🚪<br>Keluar</button>
+</nav>
+
+<script>
+/* ======================================================================
+   ALFASTEC Android — inti offline-first (Tahap 2)
+   Bentuk data localStorage SENGAJA dibuat identik dengan aplikasi desktop
+   (alfastec_project_draft, alfast_boq, kode proyek PRJ-...) supaya begitu
+   disinkron lewat server LAN Tahap 1, desktop langsung mengenalinya tanpa
+   konversi apa pun.
+   ====================================================================== */
+
+// ---------- helper dasar (nama fungsi sengaja mengikuti gaya desktop) ----------
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function money(n){return 'Rp '+(Number(n)||0).toLocaleString('id-ID')}
+function uid(p){return (p||'ID')+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+function nowIso(){return new Date().toISOString()}
+
+// setItem yang otomatis mencatat timestamp perubahan (dipakai untuk sync last-write-wins)
+function S(key,valueObjOrArr){localStorage.setItem(key,JSON.stringify(valueObjOrArr));localStorage.setItem(key+'__ts',nowIso())}
+function A(key,fallback){try{const v=localStorage.getItem(key);if(v===null)return fallback;return JSON.parse(v)}catch(e){return fallback}}
+function tsOf(key){return localStorage.getItem(key+'__ts')||'1970-01-01T00:00:00.000Z'}
+
+const CORE_KV_KEYS=['alfastec_project_draft','alfast_boq','alfastec_employees','alfastec_payroll','alfastec_invoices','alfastec_receipts','alfastec_percent_history'];
+
+// ---------- pairing / sesi ----------
+function pairing(){return A('alf_pairing',{})}
+function savePairing(p){localStorage.setItem('alf_pairing',JSON.stringify(p))}
+function clearPairing(){localStorage.removeItem('alf_pairing')}
+function serverBase(){const p=pairing();return 'http://'+p.ip+':'+(p.port||8787)}
+
+// ---------- kredensial offline (PBKDF2 via WebCrypto, tersedia native di WebView modern) ----------
+function bytesToHex(b){return Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join('')}
+function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a}
+async function pbkdf2Hash(password,saltHex){
+  const enc=new TextEncoder();
+  const salt=saltHex?hexToBytes(saltHex):crypto.getRandomValues(new Uint8Array(16));
+  const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(password),{name:'PBKDF2'},false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},keyMaterial,256);
+  return {hashHex:bytesToHex(new Uint8Array(bits)),saltHex:bytesToHex(salt)};
+}
+
+// ---------- fetch dengan timeout (supaya IP salah/tidak terjangkau tidak menggantung lama) ----------
+async function fetchWithTimeout(url, opts, timeoutMs){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), timeoutMs||6000);
+  try{ return await fetch(url, Object.assign({}, opts, {signal: ctrl.signal})); }
+  finally{ clearTimeout(timer); }
+}
+
+// ---------- login: online dulu, fallback ke kredensial ter-cache kalau server tak terjangkau ----------
+async function doLogin(ip,username,password){
+  const base='http://'+ip+':8787';
+  let networkFailed=false;
+  try{
+    const res=await fetchWithTimeout(base+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,deviceLabel:'Android'})},6000);
+    const body=await res.json().catch(()=>({}));
+    if(res.ok){
+      savePairing({ip,port:8787,username,token:body.token,tokenExpiresAt:body.expiresAt});
+      const {hashHex,saltHex}=await pbkdf2Hash(password);
+      localStorage.setItem('alf_offline_cred',JSON.stringify({username,hashHex,saltHex}));
+      return {ok:true,mode:'online'};
+    }
+    return {ok:false,mode:'online',error:body.error||'Username atau password salah.'};
+  }catch(e){ networkFailed=true; }
+
+  if(networkFailed){
+    const cached=A('alf_offline_cred',null);
+    if(cached && cached.username===username){
+      const {hashHex}=await pbkdf2Hash(password,cached.saltHex);
+      if(hashHex===cached.hashHex){
+        const old=pairing();
+        savePairing(Object.assign({},old,{ip,port:8787,username}));
+        return {ok:true,mode:'offline'};
+      }
+    }
+    return {ok:false,mode:'offline',error:'Server tidak terjangkau, dan tidak ada kredensial tersimpan yang cocok untuk mode offline.'};
+  }
+}
+
+// ---------- sinkronisasi ----------
+async function syncPush(){
+  const p=pairing();
+  if(!p.token) throw new Error('Belum login.');
+  const projects=A('alf_projects',[]).filter(x=>x.__dirty);
+  const kv={};
+  for(const k of CORE_KV_KEYS){
+    const v=localStorage.getItem(k);
+    if(v!==null) kv[k]={value:v,updated_at:tsOf(k)};
+  }
+  const payload={projects:projects.map(({__dirty,...rest})=>rest),kv};
+  const res=await fetchWithTimeout(serverBase()+'/api/sync/push',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+p.token},body:JSON.stringify(payload)},8000);
+  if(res.status===401) throw new Error('Sesi berakhir, silakan login ulang.');
+  if(!res.ok) throw new Error('Push gagal (HTTP '+res.status+').');
+  const body=await res.json();
+  const all=A('alf_projects',[]);
+  all.forEach(x=>{ if(x.__dirty) x.__dirty=false; });
+  localStorage.setItem('alf_projects',JSON.stringify(all));
+  return body;
+}
+async function syncPull(){
+  const p=pairing();
+  if(!p.token) throw new Error('Belum login.');
+  const since=localStorage.getItem('alf_last_sync')||'';
+  const res=await fetchWithTimeout(serverBase()+'/api/sync/pull?since='+encodeURIComponent(since),{headers:{'Authorization':'Bearer '+p.token}},8000);
+  if(res.status===401) throw new Error('Sesi berakhir, silakan login ulang.');
+  if(!res.ok) throw new Error('Pull gagal (HTTP '+res.status+').');
+  const body=await res.json();
+  const local=A('alf_projects',[]);
+  for(const sp of (body.projects||[])){
+    const idx=local.findIndex(x=>x.code===sp.code);
+    if(idx>=0){ if(!local[idx].__dirty) local[idx]=Object.assign({},sp,{__dirty:false}); }
+    else local.push(Object.assign({},sp,{__dirty:false}));
+  }
+  localStorage.setItem('alf_projects',JSON.stringify(local));
+  for(const [key,entry] of Object.entries(body.kv||{})){
+    if(!CORE_KV_KEYS.includes(key)) continue;
+    if(entry.updated_at>tsOf(key)){
+      localStorage.setItem(key,entry.value);
+      localStorage.setItem(key+'__ts',entry.updated_at);
+    }
+  }
+  localStorage.setItem('alf_last_sync',body.serverTime);
+  return body;
+}
+async function syncNow(){ await syncPush(); return await syncPull(); }
+
+// ---------- UI wiring ----------
+function setSyncIndicator(state,label){
+  const dot=document.getElementById('syncDot'), lab=document.getElementById('syncLabel');
+  dot.className='sync-dot '+(state||'');
+  lab.textContent=label||'';
+  lab.style.color='#cbd5e1';
+}
+async function syncNowUi(){
+  setSyncIndicator('','Menyinkron...');
+  try{
+    await syncNow();
+    setSyncIndicator('on','Tersinkron');
+    renderDashboard();
+  }catch(e){
+    setSyncIndicator('off',e.message||'Gagal sinkron');
+  }
+}
+
+function go(id){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  const el=document.getElementById('page-'+id); if(el) el.classList.add('active');
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  if(id==='dashboard') renderDashboard();
+  if(id==='rab') renderBoq();
+  if(id==='employees') renderEmployees();
+  if(id==='payroll'){ populateEmployeeSelect(); renderPayrollList(); }
+  if(id==='percent') renderPercentHistory();
+  if(id==='invoices') renderInvoices();
+  if(id==='receipts') renderReceipts();
+}
+
+function showApp(){
+  document.getElementById('tabbar').style.display='flex';
+  go('dashboard');
+}
+function logout(){
+  clearPairing();
+  document.getElementById('tabbar').style.display='none';
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-login').classList.add('active');
+}
+
+async function onLoginSubmit(){
+  const ip=document.getElementById('loginIp').value.trim();
+  const user=document.getElementById('loginUser').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const msg=document.getElementById('loginMsg');
+  if(!ip||!user||!pass){ msg.innerHTML='<div class="err">Alamat IP, username, dan password wajib diisi.</div>'; return; }
+  msg.innerHTML='<div class="muted">Menghubungkan...</div>';
+  const r=await doLogin(ip,user,pass);
+  if(r.ok){
+    msg.innerHTML = r.mode==='offline' ? '<div class="ok">Masuk mode offline. Data akan disinkron saat kembali online.</div>' : '<div class="ok">Berhasil masuk.</div>';
+    setTimeout(showApp, 400);
+  } else {
+    msg.innerHTML='<div class="err">'+esc(r.error||'Login gagal.')+'</div>';
+  }
+}
+
+// ---------- Buat Proyek ----------
+let currentProjectCode=null;
+function startNewProject(){
+  document.getElementById('pn').value='';
+  document.getElementById('pl').value='';
+  go('create');
+}
+function saveProjectStep(){
+  const name=document.getElementById('pn').value.trim();
+  const location=document.getElementById('pl').value.trim();
+  if(!name){ alert('Nama proyek wajib diisi.'); return; }
+  const code='PRJ-'+name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').slice(0,30)+'-'+Date.now();
+  const projects=A('alf_projects',[]);
+  projects.push({code,name,location,owner:null,start_date:null,end_date:null,value:0,status:'Draft',updated_at:nowIso(),__dirty:true});
+  localStorage.setItem('alf_projects',JSON.stringify(projects));
+  currentProjectCode=code;
+
+  // draft "alur inti" — bentuk field IDENTIK dengan yang dipakai desktop
+  S('alfastec_project_draft',{name,location,year:document.getElementById('py').value,type:document.getElementById('ptype').value});
+
+  document.getElementById('roadLength').value='';
+  document.getElementById('roadNote').value='';
+  document.getElementById('roadWidth').value='';
+  go('road');
+}
+
+// ---------- Data Jalan ----------
+function saveRoadStep(){
+  const lengthKm=Number(document.getElementById('roadLength').value)||0;
+  const width=Number(document.getElementById('roadWidth').value)||0;
+  if(lengthKm<=0){ alert('Panjang ruas harus lebih dari 0 km.'); return; }
+  if(width<=0){ alert('Lebar jalan harus lebih dari 0 meter.'); return; }
+  const d=A('alfastec_project_draft',{});
+  d.lengthKm=lengthKm;
+  d.roadNote=document.getElementById('roadNote').value.trim();
+  d.width=width;
+  d.shoulder=Number(document.getElementById('shoulderWidth').value)||0;
+  d.pavement=document.getElementById('pavement').value;
+  d.condition=document.getElementById('condition').value;
+  S('alfastec_project_draft',d);
+  document.getElementById('rabProjectLabel').textContent=(d.name||'-')+' — '+lengthKm.toLocaleString('id-ID')+' km';
+  go('rab');
+}
+
+// ---------- RAB / BOQ ----------
+function addBoqItem(){
+  if(!currentProjectCode){ alert('Buat/pilih proyek terlebih dahulu.'); return; }
+  const name=document.getElementById('boqName').value.trim();
+  const volume=Number(document.getElementById('boqVolume').value)||0;
+  const unit=document.getElementById('boqUnit').value.trim();
+  const price=Number(document.getElementById('boqPrice').value)||0;
+  if(!name||volume<=0){ alert('Uraian pekerjaan dan volume wajib diisi.'); return; }
+  const list=A('alfast_boq',[]);
+  list.push({id:uid('BOQ'),code:null,name,unit,volume,price,ahspId:null,projectCode:currentProjectCode});
+  S('alfast_boq',list);
+  document.getElementById('boqName').value='';
+  document.getElementById('boqVolume').value='';
+  document.getElementById('boqUnit').value='';
+  document.getElementById('boqPrice').value='';
+  renderBoq();
+}
+function deleteBoqItem(id){
+  S('alfast_boq', A('alfast_boq',[]).filter(x=>x.id!==id));
+  renderBoq();
+}
+function renderBoq(){
+  const all=A('alfast_boq',[]);
+  const list = currentProjectCode ? all.filter(x=>x.projectCode===currentProjectCode) : all;
+  const tbody=document.getElementById('boqTable');
+  const total=list.reduce((s,x)=>s+(Number(x.volume)||0)*(Number(x.price)||0),0);
+  tbody.innerHTML = list.map(x=>`<tr><td>${esc(x.name)}<br><span class="muted">${esc(x.unit||'')}</span></td><td>${Number(x.volume||0).toLocaleString('id-ID')}</td><td>${money((x.volume||0)*(x.price||0))}</td><td><button class="btn small danger" onclick="deleteBoqItem('${x.id}')">Hapus</button></td></tr>`).join('') || '<tr><td colspan="4" class="muted">Belum ada item.</td></tr>';
+  document.getElementById('boqTotal').textContent=money(total);
+}
+
+// ---------- Dashboard ----------
+function renderDashboard(){
+  const list=A('alf_projects',[]);
+  const box=document.getElementById('projectList');
+  box.innerHTML = list.length ? list.map(p=>`
+    <div class="list-item">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <b>${esc(p.name)}</b>
+        ${p.__dirty?'<span class="pill dirty">belum sinkron</span>':'<span class="pill">tersinkron</span>'}
+      </div>
+      <div class="muted">${esc(p.location||'-')}</div>
+      <div style="margin-top:6px"><button class="btn small secondary" onclick="openProjectRab('${p.code}')">Buka RAB/BOQ</button></div>
+    </div>`).join('') : '<p class="muted">Belum ada proyek. Ketuk "+ Proyek Baru" di bawah.</p>';
+  const lastSync=localStorage.getItem('alf_last_sync');
+  document.getElementById('syncMeta').textContent = lastSync ? 'Terakhir sinkron: '+new Date(lastSync).toLocaleString('id-ID') : 'Belum pernah sinkron.';
+}
+function openProjectRab(code){
+  currentProjectCode=code;
+  const p=A('alf_projects',[]).find(x=>x.code===code);
+  document.getElementById('rabProjectLabel').textContent=(p?.name||'-');
+  go('rab');
+}
+
+// ======================================================================
+// KARYAWAN
+// ======================================================================
+let employeeEdit=null;
+function employeeData(){return A('alfastec_employees',[])}
+function saveEmployeeData(d){S('alfastec_employees',d)}
+function newEmployee(){
+  employeeEdit=null;
+  ['empId','empDivision','empPhone','empEmail','empJoin','empSkill','empNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('empName').value='';
+  document.getElementById('empPosition').value='Administrator';
+  document.getElementById('empStatus').value='Aktif';
+  document.getElementById('employeeFormTitle').textContent='Tambah Karyawan';
+}
+function editEmployee(id){
+  const x=employeeData().find(z=>z.id===id); if(!x)return;
+  employeeEdit=id;
+  document.getElementById('empId').value=x.nik||'';
+  document.getElementById('empName').value=x.name||'';
+  document.getElementById('empPosition').value=x.position||'Administrator';
+  document.getElementById('empDivision').value=x.division||'';
+  document.getElementById('empPhone').value=x.phone||'';
+  document.getElementById('empEmail').value=x.email||'';
+  document.getElementById('empStatus').value=x.status||'Aktif';
+  document.getElementById('empJoin').value=x.join||'';
+  document.getElementById('empSkill').value=x.skill||'';
+  document.getElementById('empNote').value=x.note||'';
+  document.getElementById('employeeFormTitle').textContent='Edit Karyawan: '+x.name;
+}
+function saveEmployee(){
+  const name=document.getElementById('empName').value.trim();
+  if(!name){ alert('Nama karyawan wajib diisi.'); return; }
+  let d=employeeData();
+  const obj={
+    id:employeeEdit||uid('EMP'),
+    nik:document.getElementById('empId').value.trim(),
+    name,
+    position:document.getElementById('empPosition').value,
+    division:document.getElementById('empDivision').value.trim(),
+    phone:document.getElementById('empPhone').value.trim(),
+    email:document.getElementById('empEmail').value.trim(),
+    status:document.getElementById('empStatus').value,
+    join:document.getElementById('empJoin').value,
+    skill:document.getElementById('empSkill').value.trim(),
+    note:document.getElementById('empNote').value.trim()
+  };
+  let i=d.findIndex(z=>z.id===obj.id);
+  if(i>=0)d[i]=obj; else d.push(obj);
+  saveEmployeeData(d);
+  employeeEdit=obj.id;
+  renderEmployees();
+  alert('Karyawan tersimpan.');
+}
+function deleteEmployee(){
+  if(!employeeEdit){ alert('Pilih karyawan.'); return; }
+  if(!confirm('Hapus karyawan ini?'))return;
+  saveEmployeeData(employeeData().filter(x=>x.id!==employeeEdit));
+  newEmployee();
+  renderEmployees();
+}
+function populateEmployeeSelect(){
+  const sel=document.getElementById('payEmployee');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Pilih karyawan</option>'+employeeData().map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
+  if(cur)sel.value=cur;
+}
+function renderEmployees(){
+  const d=employeeData();
+  const box=document.getElementById('employeeList');
+  box.innerHTML=d.map(x=>`<div class="list-item" style="cursor:pointer" onclick="editEmployee('${x.id}')">
+      <b>${esc(x.name)}</b>
+      <div class="muted">${esc(x.position||'')} · ${esc(x.division||'')}</div>
+    </div>`).join('') || '<p class="muted">Belum ada karyawan.</p>';
+  populateEmployeeSelect();
+}
+
+// ======================================================================
+// PAYROLL & SLIP GAJI
+// ======================================================================
+let payrollEdit=null;
+function payrollData(){return A('alfastec_payroll',[])}
+function savePayrollData(d){S('alfastec_payroll',d)}
+function payrollNet(x){return (Number(x.basic)||0)+(Number(x.allowance)||0)+(Number(x.bonus)||0)+(Number(x.overtime)||0)-(Number(x.deduction)||0)}
+function newPayroll(){
+  payrollEdit=null;
+  document.getElementById('payEmployee').value='';
+  document.getElementById('payPeriod').value='';
+  ['payBasic','payAllowance','payBonus','payOvertime','payDeduction'].forEach(id=>document.getElementById(id).value=0);
+  document.getElementById('payMethod').value='Transfer Bank';
+  document.getElementById('payStatus').value='Dibayar';
+  document.getElementById('payDate').value='';
+  document.getElementById('payNote').value='';
+  document.getElementById('payFormTitle').textContent='Pembayaran Gaji';
+  document.getElementById('payslipPreview').textContent='Pilih data pembayaran untuk melihat slip gaji.';
+}
+function editPayroll(id){
+  const x=payrollData().find(z=>z.id===id); if(!x)return;
+  payrollEdit=id;
+  populateEmployeeSelect();
+  document.getElementById('payEmployee').value=x.employeeId||'';
+  document.getElementById('payPeriod').value=x.period||'';
+  document.getElementById('payBasic').value=x.basic||0;
+  document.getElementById('payAllowance').value=x.allowance||0;
+  document.getElementById('payBonus').value=x.bonus||0;
+  document.getElementById('payOvertime').value=x.overtime||0;
+  document.getElementById('payDeduction').value=x.deduction||0;
+  document.getElementById('payMethod').value=x.method||'Transfer Bank';
+  document.getElementById('payStatus').value=x.status||'Dibayar';
+  document.getElementById('payDate').value=x.date||'';
+  document.getElementById('payNote').value=x.note||'';
+  document.getElementById('payFormTitle').textContent='Edit Pembayaran';
+  renderPayslipPreview(x);
+}
+function savePayroll(){
+  const employeeId=document.getElementById('payEmployee').value;
+  if(!employeeId){ alert('Pilih karyawan.'); return; }
+  const obj={
+    id:payrollEdit||uid('PAY'),
+    employeeId,
+    period:document.getElementById('payPeriod').value,
+    basic:+document.getElementById('payBasic').value||0,
+    allowance:+document.getElementById('payAllowance').value||0,
+    bonus:+document.getElementById('payBonus').value||0,
+    overtime:+document.getElementById('payOvertime').value||0,
+    deduction:+document.getElementById('payDeduction').value||0,
+    method:document.getElementById('payMethod').value,
+    status:document.getElementById('payStatus').value,
+    date:document.getElementById('payDate').value,
+    note:document.getElementById('payNote').value.trim()
+  };
+  let d=payrollData();
+  let i=d.findIndex(z=>z.id===obj.id);
+  if(i>=0)d[i]=obj; else d.push(obj);
+  savePayrollData(d);
+  payrollEdit=obj.id;
+  renderPayrollList();
+  renderPayslipPreview(obj);
+  alert('Pembayaran gaji tersimpan.');
+}
+function deletePayroll(){
+  if(!payrollEdit){ alert('Pilih pembayaran.'); return; }
+  if(!confirm('Hapus pembayaran ini?'))return;
+  savePayrollData(payrollData().filter(x=>x.id!==payrollEdit));
+  newPayroll();
+  renderPayrollList();
+}
+function renderPayrollList(){
+  const emps=employeeData();
+  const d=payrollData();
+  const box=document.getElementById('payrollList');
+  box.innerHTML=d.slice().reverse().map(x=>{
+    const emp=emps.find(e=>e.id===x.employeeId);
+    return `<div class="list-item" style="cursor:pointer" onclick="editPayroll('${x.id}')">
+      <b>${esc(emp?emp.name:'Karyawan')}</b>
+      <div class="muted">${esc(x.period||'')} · ${esc(x.status||'')}</div>
+      <div>${money(payrollNet(x))}</div>
+    </div>`;
+  }).join('') || '<p class="muted">Belum ada data.</p>';
+}
+function renderPayslipPreview(x){
+  const box=document.getElementById('payslipPreview');
+  if(!x){ box.textContent='Pilih data pembayaran untuk melihat slip gaji.'; return; }
+  const emp=employeeData().find(e=>e.id===x.employeeId);
+  box.innerHTML='<b>'+esc(emp?emp.name:'-')+'</b> — '+esc(x.period||'-')+'<br>'
+    +'Gaji Pokok: '+money(x.basic)+'<br>Tunjangan: '+money(x.allowance)+'<br>Bonus: '+money(x.bonus)+'<br>'
+    +'Lembur: '+money(x.overtime)+'<br>Potongan: -'+money(x.deduction)+'<br>'
+    +'<b>Gaji Bersih: '+money(payrollNet(x))+'</b><br>Status: '+esc(x.status||'-');
+}
+
+// ======================================================================
+// KALKULATOR PERSENTASE
+// ======================================================================
+function percentHistoryData(){return A('alfastec_percent_history',[])}
+function savePercentHistoryData(d){S('alfastec_percent_history',d)}
+function calculatePercent(){
+  const base=+document.getElementById('pctBase').value||0;
+  const rate=Math.min(100,Math.max(0,+document.getElementById('pctRate').value||0));
+  const val=base*rate/100, rem=base-val;
+  document.getElementById('pctValue').textContent=money(val);
+  document.getElementById('pctRemain').textContent=money(rem);
+  document.getElementById('pctRemainRate').textContent=(100-rate).toFixed(2)+'%';
+  return {base,rate,val,rem};
+}
+function savePercentCalc(){
+  const r=calculatePercent();
+  if(r.base<=0){ alert('Masukkan nilai proyek.'); return; }
+  let d=percentHistoryData();
+  d.push({id:uid('PCT'),date:new Date().toLocaleDateString('id-ID'),name:document.getElementById('pctName').value.trim(),type:document.getElementById('pctType').value,base:r.base,rate:r.rate,value:r.val,remain:r.rem});
+  savePercentHistoryData(d);
+  renderPercentHistory();
+}
+function renderPercentHistory(){
+  const d=percentHistoryData();
+  document.getElementById('pctHistory').innerHTML=d.slice().reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.name||x.type||'-')}</td><td>${money(x.base)}</td><td>${x.rate}%</td><td>${money(x.value)}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Belum ada riwayat.</td></tr>';
+}
+
+// ======================================================================
+// INVOICE MANUAL
+// ======================================================================
+let invoiceEdit=null;
+function invoiceData(){return A('alfastec_invoices',[])}
+function saveInvoiceData(d){S('alfastec_invoices',d)}
+function invoiceAmount(x){let sub=(+x.qty||0)*(+x.price||0),disc=+x.discount||0,tax=Math.max(0,sub-disc)*(+x.tax||0)/100;return {sub,disc,tax,total:Math.max(0,sub-disc)+tax}}
+function newInvoice(){
+  invoiceEdit=null;
+  const today=new Date().toISOString().slice(0,10);
+  document.getElementById('invNumber').value='INV-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-5);
+  document.getElementById('invDate').value=today;
+  document.getElementById('invDue').value='';
+  document.getElementById('invStatus').value='Draft';
+  ['invCustomer','invPhone','invEmail','invAddress','invDescription','invNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('invQty').value=1;
+  document.getElementById('invPrice').value=0;
+  document.getElementById('invDiscount').value=0;
+  document.getElementById('invTax').value=0;
+  document.getElementById('invoiceFormTitle').textContent='Invoice Baru';
+  renderInvoicePreview();
+}
+function editInvoice(id){
+  const x=invoiceData().find(z=>z.id===id); if(!x)return;
+  invoiceEdit=id;
+  ['number','date','due','status','customer','phone','email','address','description','qty','price','discount','tax','note'].forEach(k=>{
+    const el=document.getElementById('inv'+k[0].toUpperCase()+k.slice(1));
+    if(el)el.value=x[k]??'';
+  });
+  document.getElementById('invoiceFormTitle').textContent='Edit Invoice '+x.number;
+  renderInvoicePreview();
+}
+function saveInvoice(){
+  const customer=document.getElementById('invCustomer').value.trim();
+  const desc=document.getElementById('invDescription').value.trim();
+  if(!customer||!desc){ alert('Pelanggan dan uraian tagihan wajib diisi.'); return; }
+  const obj={
+    id:invoiceEdit||uid('INV'),
+    number:document.getElementById('invNumber').value.trim(),
+    date:document.getElementById('invDate').value,
+    due:document.getElementById('invDue').value,
+    status:document.getElementById('invStatus').value,
+    customer,
+    phone:document.getElementById('invPhone').value.trim(),
+    email:document.getElementById('invEmail').value.trim(),
+    address:document.getElementById('invAddress').value.trim(),
+    description:desc,
+    qty:+document.getElementById('invQty').value||0,
+    price:+document.getElementById('invPrice').value||0,
+    discount:+document.getElementById('invDiscount').value||0,
+    tax:+document.getElementById('invTax').value||0,
+    note:document.getElementById('invNote').value.trim()
+  };
+  let d=invoiceData();
+  let i=d.findIndex(z=>z.id===obj.id);
+  if(i>=0)d[i]=obj; else d.push(obj);
+  saveInvoiceData(d);
+  invoiceEdit=obj.id;
+  renderInvoices();
+  renderInvoicePreview();
+  alert('Invoice tersimpan.');
+}
+function deleteInvoice(){
+  if(!invoiceEdit){ alert('Pilih invoice.'); return; }
+  if(!confirm('Hapus invoice ini?'))return;
+  saveInvoiceData(invoiceData().filter(x=>x.id!==invoiceEdit));
+  newInvoice();
+  renderInvoices();
+}
+function renderInvoices(){
+  const d=invoiceData();
+  const box=document.getElementById('invoiceList');
+  box.innerHTML=d.slice().reverse().map(x=>`<div class="list-item" style="cursor:pointer" onclick="editInvoice('${x.id}')">
+      <b>${esc(x.number)}</b>
+      <div>${esc(x.customer||'-')}</div>
+      <div class="muted">${esc(x.status)} · ${money(invoiceAmount(x).total)}</div>
+    </div>`).join('') || '<p class="muted">Belum ada invoice.</p>';
+}
+function renderInvoicePreview(){
+  const box=document.getElementById('invoicePreview'); if(!box)return;
+  const x={
+    qty:+document.getElementById('invQty').value||0,
+    price:+document.getElementById('invPrice').value||0,
+    discount:+document.getElementById('invDiscount').value||0,
+    tax:+document.getElementById('invTax').value||0
+  };
+  const a=invoiceAmount(x);
+  box.innerHTML='Subtotal: '+money(a.sub)+'<br>Diskon: -'+money(a.disc)+'<br>Pajak: '+money(a.tax)+'<br><b>Total: '+money(a.total)+'</b>';
+}
+
+// ======================================================================
+// KWITANSI MANUAL
+// ======================================================================
+let receiptEdit=null;
+function receiptData(){return A('alfastec_receipts',[])}
+function saveReceiptData(d){S('alfastec_receipts',d)}
+function rcRawAmount(){const el=document.getElementById('rcAmount');return Number(String(el.value||'').replace(/[^\d]/g,''))||0}
+function formatRcAmount(){const el=document.getElementById('rcAmount');const n=rcRawAmount();el.value=n?('Rp '+n.toLocaleString('id-ID')):''}
+function newReceipt(){
+  receiptEdit=null;
+  const d=new Date().toISOString().slice(0,10);
+  document.getElementById('rcNumber').value='KW-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-5);
+  document.getElementById('rcDate').value=d;
+  ['rcFrom','rcAddress','rcPurpose','rcNote','rcReceiver','rcReceiverRole'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rcAmount').value='';
+  document.getElementById('rcMethod').value='Tunai';
+  document.getElementById('rcStatus').value='Lunas';
+  document.getElementById('receiptFormTitle').textContent='Kwitansi Baru';
+}
+function editReceipt(id){
+  const x=receiptData().find(z=>z.id===id); if(!x)return;
+  receiptEdit=id;
+  document.getElementById('rcNumber').value=x.number||'';
+  document.getElementById('rcDate').value=x.date||'';
+  document.getElementById('rcFrom').value=x.from||'';
+  document.getElementById('rcAddress').value=x.address||'';
+  document.getElementById('rcAmount').value=x.amount?('Rp '+Number(x.amount).toLocaleString('id-ID')):'';
+  document.getElementById('rcPurpose').value=x.purpose||'';
+  document.getElementById('rcMethod').value=x.method||'Tunai';
+  document.getElementById('rcStatus').value=x.status||'Lunas';
+  document.getElementById('rcNote').value=x.note||'';
+  document.getElementById('rcReceiver').value=x.receiver||'';
+  document.getElementById('rcReceiverRole').value=x.receiverRole||'';
+  document.getElementById('receiptFormTitle').textContent='Edit Kwitansi '+x.number;
+}
+function saveReceipt(){
+  const from=document.getElementById('rcFrom').value.trim();
+  const amount=rcRawAmount();
+  const purpose=document.getElementById('rcPurpose').value.trim();
+  if(!from||!amount||!purpose){ alert('Pemberi, jumlah uang, dan tujuan pembayaran wajib diisi.'); return; }
+  const obj={
+    id:receiptEdit||uid('RCPT'),
+    number:document.getElementById('rcNumber').value.trim(),
+    date:document.getElementById('rcDate').value,
+    from,
+    address:document.getElementById('rcAddress').value.trim(),
+    amount,
+    purpose,
+    method:document.getElementById('rcMethod').value,
+    status:document.getElementById('rcStatus').value,
+    note:document.getElementById('rcNote').value.trim(),
+    receiver:document.getElementById('rcReceiver').value.trim(),
+    receiverRole:document.getElementById('rcReceiverRole').value.trim()
+  };
+  let d=receiptData();
+  let i=d.findIndex(z=>z.id===obj.id);
+  if(i>=0)d[i]=obj; else d.push(obj);
+  saveReceiptData(d);
+  receiptEdit=obj.id;
+  renderReceipts();
+  alert('Kwitansi tersimpan.');
+}
+function deleteReceipt(){
+  if(!receiptEdit){ alert('Pilih kwitansi.'); return; }
+  if(!confirm('Hapus kwitansi ini?'))return;
+  saveReceiptData(receiptData().filter(x=>x.id!==receiptEdit));
+  newReceipt();
+  renderReceipts();
+}
+function renderReceipts(){
+  const d=receiptData();
+  const box=document.getElementById('receiptList');
+  box.innerHTML=d.slice().reverse().map(x=>`<div class="list-item" style="cursor:pointer" onclick="editReceipt('${x.id}')">
+      <b>${esc(x.number||'-')}</b>
+      <div>${esc(x.from||'-')}</div>
+      <div class="muted">${esc(x.status||'-')} · ${money(x.amount)}</div>
+    </div>`).join('') || '<p class="muted">Belum ada kwitansi.</p>';
+}
+
+// ---------- boot ----------
+(function init(){
+  const p=pairing();
+  if(p && p.token && p.ip){ showApp(); }
+  else { document.getElementById('page-login').classList.add('active'); }
+})();
+</script>
+</body>
+</html>

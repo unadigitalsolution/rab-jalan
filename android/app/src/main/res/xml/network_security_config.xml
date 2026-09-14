@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Aplikasi ini HANYA bicara ke server ALFASTEC di jaringan lokal (LAN),
+  yang jalan di HTTP biasa (lihat catatan di AndroidManifest.xml).
+  Tidak ada trafik internet/cloud sama sekali.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
