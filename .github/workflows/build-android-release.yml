@@ -61,10 +61,9 @@ jobs:
           ALFASTEC_KEY_PASSWORD: ${{ secrets.ALFASTEC_KEY_PASSWORD }}
         run: gradle :app:assembleRelease --no-daemon --stacktrace
 
-      - name: Hapus file keystore dari runner
-        if: always()
-        working-directory: android
-        run: rm -f app/alfastec-release.keystore
+- name: Hapus file keystore dari runner
+  if: always()
+  run: rm -f android/app/alfastec-release.keystore
 
       - name: Pastikan hasil build memang RELEASE dan sudah ditandatangani
         run: |
