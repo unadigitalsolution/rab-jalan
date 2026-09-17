@@ -3,6 +3,8 @@ name: Build ALFASTEC Desktop (Windows Installer)
 on:
   workflow_dispatch: {}
   push:
+    branches:
+      - main
     tags:
       - 'desktop-v*'
 
