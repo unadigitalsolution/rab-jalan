@@ -5,14 +5,11 @@ const invoke = (channel, ...args) => ipcRenderer.invoke(channel, ...args);
 const coreAPI = {
   auth: Object.freeze({
     status: () => invoke('auth:status'),
-    createAdmin: (username, password, securityQuestion, securityAnswer) =>
-      invoke('auth:create-admin', username, password, securityQuestion, securityAnswer),
+    createAdmin: (username, password, securityQuestion, securityAnswer) => invoke('auth:create-admin', username, password, securityQuestion, securityAnswer),
     login: (username, password) => invoke('auth:login', username, password),
-    changePassword: (userId, oldPassword, newPassword) =>
-      invoke('auth:change-password', userId, oldPassword, newPassword),
+    changePassword: (userId, oldPassword, newPassword) => invoke('auth:change-password', userId, oldPassword, newPassword),
     securityQuestion: (username) => invoke('auth:security-question', username),
-    resetPassword: (username, answer, newPassword) =>
-      invoke('auth:reset-password', username, answer, newPassword)
+    resetPassword: (username, answer, newPassword) => invoke('auth:reset-password', username, answer, newPassword)
   }),
   license: Object.freeze({
     trialStatus: () => invoke('license:trial-status'),
@@ -36,54 +33,52 @@ const coreAPI = {
     projectsList: () => invoke('projects:list'),
     syncMasterData: (table, rows) => invoke('data:sync-master', table, rows)
   }),
-  support: Object.freeze({
-    whatsapp: (message) => invoke('app:open-whatsapp', message)
-  }),
+  support: Object.freeze({ whatsapp: (message) => invoke('app:open-whatsapp', message) }),
   network: Object.freeze({
     lanInfo: () => invoke('network:lan-info'),
     toggleSync: (enabled) => invoke('network:toggle-sync', enabled)
   })
 };
 
-/*
- * Compatibility adapter.
- * The current renderer was written against window.api, while the hardened
- * preload exposes alfastecAPI. Keeping the adapter here avoids exposing
- * ipcRenderer and lets old/new UI code use the same safe bridge.
- */
+/* Compatibility adapter for the existing road-RAB renderer. */
 const legacyAPI = {
   getProjects: async () => {
-    const rows = await coreAPI.database.projectsList();
-    return rows.map((p) => ({
-      id: String(p.id),
-      nama: p.name || '',
-      lokasi: p.location || '',
-      panjang: p.panjang ?? p.length ?? 0,
-      lebar: p.lebar ?? p.width ?? 0,
-      jenisKonstruksi: p.jenisKonstruksi || p.constructionType || 'Perkerasan Jalan',
-      tebalPerkerasan: p.tebalPerkerasan ?? p.thickness ?? 0,
-      jenisPondasi: p.jenisPondasi || '',
-      kondisiTanah: p.kondisiTanah || '',
-      drainase: !!p.drainase,
-      bahuJalan: !!p.bahuJalan,
-      catatan: p.catatan || '',
-      progress: Number(p.progress) || 0,
-      nilaiProyek: Number(p.value) || 0,
-      rabItems: [],
-      routePoints: []
-    }));
+    const [rows, store] = await Promise.all([
+      coreAPI.database.projectsList(),
+      coreAPI.database.storageLoad()
+    ]);
+    return rows.map((p) => {
+      let meta = {};
+      try { meta = JSON.parse(store[`project_meta_${p.id}`] || '{}'); } catch (_) { meta = {}; }
+      let rabItems = [];
+      let routePoints = [];
+      try { rabItems = JSON.parse(store[`rab_items_${p.id}`] || '[]'); } catch (_) {}
+      try { routePoints = JSON.parse(store[`route_points_${p.id}`] || '[]'); } catch (_) {}
+      return {
+        id: String(p.id),
+        nama: p.name || '',
+        lokasi: p.location || meta.lokasi || '',
+        panjang: meta.panjang ?? 0,
+        lebar: meta.lebar ?? 0,
+        jenisKonstruksi: meta.jenisKonstruksi || 'Perkerasan Jalan',
+        tebalPerkerasan: meta.tebalPerkerasan ?? 0,
+        jenisPondasi: meta.jenisPondasi || '',
+        kondisiTanah: meta.kondisiTanah || '',
+        drainase: !!meta.drainase,
+        bahuJalan: !!meta.bahuJalan,
+        catatan: meta.catatan || '',
+        progress: Number(meta.progress) || 0,
+        status: p.status || 'Draft',
+        nilaiProyek: Number(p.value) || 0,
+        rabItems,
+        routePoints
+      };
+    });
   },
 
   getProject: async (id) => {
-    const projects = await legacyAPI.getProjects();
-    const project = projects.find((p) => String(p.id) === String(id));
+    const project = (await legacyAPI.getProjects()).find((p) => String(p.id) === String(id));
     if (!project) throw new Error('Proyek tidak ditemukan.');
-    const [rabRaw, routeRaw] = await Promise.all([
-      coreAPI.database.storageLoad(),
-      coreAPI.database.storageLoad()
-    ]);
-    try { project.rabItems = JSON.parse(rabRaw[`rab_items_${id}`] || '[]'); } catch (_) { project.rabItems = []; }
-    try { project.routePoints = JSON.parse(routeRaw[`route_points_${id}`] || '[]'); } catch (_) { project.routePoints = []; }
     return project;
   },
 
@@ -99,6 +94,20 @@ const legacyAPI = {
       end_date: null
     };
     const id = await coreAPI.database.saveProject(payload);
+    const meta = {
+      lokasi: p.lokasi || '',
+      panjang: Number(p.panjang) || 0,
+      lebar: Number(p.lebar) || 0,
+      jenisKonstruksi: p.jenisKonstruksi || 'Perkerasan Jalan',
+      tebalPerkerasan: Number(p.tebalPerkerasan) || 0,
+      jenisPondasi: p.jenisPondasi || '',
+      kondisiTanah: p.kondisiTanah || '',
+      drainase: !!p.drainase,
+      bahuJalan: !!p.bahuJalan,
+      catatan: p.catatan || '',
+      progress: 0
+    };
+    await coreAPI.database.storageSet(`project_meta_${id}`, JSON.stringify(meta));
     return id;
   },
 
@@ -107,22 +116,15 @@ const legacyAPI = {
   getDashboardStats: async () => {
     const projects = await legacyAPI.getProjects();
     const totalNilai = projects.reduce((s, p) => s + (Number(p.nilaiProyek) || 0), 0);
-    const berjalan = projects.filter((p) => String(p.status || '').toLowerCase() !== 'selesai').length;
-    const selesai = projects.length - berjalan;
-    const avgProgress = projects.length
-      ? Math.round(projects.reduce((s, p) => s + (Number(p.progress) || 0), 0) / projects.length)
-      : 0;
+    const selesai = projects.filter((p) => String(p.status).toLowerCase() === 'selesai').length;
+    const avgProgress = projects.length ? Math.round(projects.reduce((s, p) => s + (Number(p.progress) || 0), 0) / projects.length) : 0;
     return {
       totalProyek: projects.length,
       totalNilai,
-      proyekBerjalan: berjalan,
+      proyekBerjalan: projects.length - selesai,
       proyekSelesai: selesai,
       avgProgress,
-      recent: projects.slice(0, 5).map((p) => ({
-        nama: p.nama,
-        progress: p.progress || 0,
-        nilai: p.nilaiProyek || 0
-      }))
+      recent: projects.slice(0, 5).map((p) => ({ nama: p.nama, progress: p.progress || 0, nilai: p.nilaiProyek || 0 }))
     };
   },
 
