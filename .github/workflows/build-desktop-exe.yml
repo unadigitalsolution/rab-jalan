@@ -38,21 +38,20 @@ jobs:
         run: npm run build
 
       - name: Pastikan installer benar-benar dihasilkan
-        shell: bash
+        shell: pwsh
         run: |
-          EXE=$(find dist -maxdepth 1 -iname "*.exe" | head -n1)
-
-          if [ -z "$EXE" ]; then
-            echo "::error::Tidak ditemukan file .exe di folder dist/ setelah build."
+          $exe = Get-ChildItem -Path dist -Filter *.exe -File | Select-Object -First 1
+          if (-not $exe) {
+            Write-Error "Tidak ditemukan file .exe di folder dist/ setelah build."
             exit 1
-          fi
-
-          echo "Installer ditemukan: $EXE"
-          echo "EXE_PATH=$EXE" >> "$GITHUB_ENV"
+          }
+          Write-Host "Installer ditemukan: $($exe.FullName)"
+          "EXE_PATH=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Unggah installer sebagai artifact
         uses: actions/upload-artifact@v4
         with:
           name: ALFASTEC-windows-installer
           path: ${{ env.EXE_PATH }}
+          if-no-files-found: error
           retention-days: 90
