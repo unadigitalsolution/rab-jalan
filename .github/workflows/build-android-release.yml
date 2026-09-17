@@ -3,6 +3,8 @@ name: Build ALFASTEC Android (Release APK)
 on:
   workflow_dispatch: {}
   push:
+    branches:
+      - main
     tags:
       - 'android-v*'
 
