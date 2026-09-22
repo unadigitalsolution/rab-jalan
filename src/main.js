@@ -830,6 +830,11 @@ function createWindow() {
   // sekali dan cuma bikin bingung pengguna non-teknis.
   Menu.setApplicationMenu(null);
 
+  const rendererPath = path.join(__dirname, 'renderer', 'index.html');
+  if (!fs.existsSync(rendererPath)) {
+    throw new Error('File renderer tidak ditemukan: ' + rendererPath);
+  }
+
   mainWindow = new BrowserWindow({
     width: 1440,
     height: 900,
@@ -869,7 +874,37 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+  // Diagnostics + fallback agar kegagalan renderer tidak berubah menjadi
+  // jendela putih tanpa informasi. Ini juga membantu audit build installer.
+  mainWindow.webContents.on('console-message', (_event, level, message, line, sourceId) => {
+    console.log('[renderer]', { level, message, line, sourceId });
+  });
+  mainWindow.webContents.on('render-process-gone', (_event, details) => {
+    console.error('[renderer-process-gone]', details);
+    if (!mainWindow.isDestroyed()) {
+      mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(
+        '<!doctype html><html><body style="font-family:Arial;padding:40px;background:#f8fafc;color:#111827">' +
+        '<h2>ALFASTEC gagal memuat tampilan.</h2><p>Proses tampilan berhenti. Silakan tutup aplikasi dan jalankan kembali.</p>' +
+        '<pre style="white-space:pre-wrap;background:#fff;padding:16px;border:1px solid #ddd">' +
+        String(details.reason || 'unknown') + '</pre></body></html>'
+      ));
+    }
+  });
+  mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
+    console.error('[renderer-load-failed]', { errorCode, errorDescription, validatedURL });
+    if (!mainWindow.isDestroyed()) {
+      mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(
+        '<!doctype html><html><body style="font-family:Arial;padding:40px;background:#f8fafc;color:#111827">' +
+        '<h2>ALFASTEC gagal memuat aplikasi.</h2><p>File tampilan tidak dapat dimuat.</p>' +
+        '<pre style="white-space:pre-wrap;background:#fff;padding:16px;border:1px solid #ddd">' +
+        String(errorCode) + ' — ' + String(errorDescription) + '\n' + String(validatedURL) + '</pre></body></html>'
+      ));
+    }
+  });
+
+  mainWindow.loadFile(rendererPath).catch((err) => {
+    console.error('[renderer-load-exception]', err);
+  });
 }
 
 app.on('second-instance', () => {
