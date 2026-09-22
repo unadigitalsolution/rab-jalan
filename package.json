@@ -30,7 +30,9 @@
       "output": "dist"
     },
     "files": [
-      "src/**/*",
+      "src/main.js",
+      "src/preload.js",
+      "src/renderer/**/*",
       "build/**/*",
       "package.json"
     ],
