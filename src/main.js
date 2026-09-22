@@ -845,7 +845,14 @@ function createWindow() {
     minWidth: 1100,
     minHeight: 700,
     backgroundColor: '#f8fafc',
-    icon: path.join(__dirname, '../build/icon.ico'),
+    icon: (() => {
+      const candidates = [
+        path.join(process.resourcesPath, 'build', 'icon.ico'),
+        path.join(app.getAppPath(), 'build', 'icon.ico'),
+        path.join(__dirname, '../build/icon.ico')
+      ];
+      return candidates.find(p => fs.existsSync(p));
+    })(),
     autoHideMenuBar: true,
     webPreferences: {
       preload: (() => {
