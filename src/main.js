@@ -848,7 +848,16 @@ function createWindow() {
     icon: path.join(__dirname, '../build/icon.ico'),
     autoHideMenuBar: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: (() => {
+        const candidates = [
+          path.join(app.getAppPath(), 'src', 'preload.js'),
+          path.join(app.getAppPath(), 'preload.js'),
+          path.join(__dirname, 'preload.js')
+        ];
+        const found = candidates.find(p => fs.existsSync(p));
+        if (!found) throw new Error('File preload tidak ditemukan: ' + candidates.join(' | '));
+        return found;
+      })(),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
