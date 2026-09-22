@@ -16,7 +16,7 @@ if (!fs.existsSync(asar)) fail('app.asar tidak ditemukan: ' + asar);
 
 let entries;
 try {
-  entries = listPackage(asar).map(p => String(p).replace(/^\\/+/, ''));
+  entries = listPackage(asar).map(p => String(p).replace(/^\/+/, ''));
 } catch (e) {
   fail('Tidak dapat membaca app.asar: ' + e.message);
 }
