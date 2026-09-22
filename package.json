@@ -67,6 +67,12 @@
       "grantFileProtocolExtraPrivileges": false,
       "loadBrowserProcessSpecificV8Snapshot": false
     },
-    "forceCodeSigning": false
+    "forceCodeSigning": false,
+    "extraResources": [
+      {
+        "from": "src/renderer",
+        "to": "renderer"
+      }
+    ]
   }
 }
