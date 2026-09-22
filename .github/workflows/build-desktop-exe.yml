@@ -71,6 +71,38 @@ jobs:
           Write-Host "Installer ditemukan: $($exe.FullName)"
           "EXE_PATH=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      - name: Uji instalasi NSIS dan startup aplikasi terpasang
+        shell: pwsh
+        run: |
+          $exe = $env:EXE_PATH
+          $installDir = Join-Path $PWD "installed-test"
+          New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+          $installer = Start-Process -FilePath $exe -ArgumentList "/S", "/D=$installDir" -Wait -PassThru
+          if ($installer.ExitCode -ne 0) {
+            Write-Error "Installer NSIS gagal. ExitCode=$($installer.ExitCode)"
+            exit 1
+          }
+          $installedApp = Join-Path $installDir "ALFASTEC.exe"
+          if (-not (Test-Path $installedApp)) {
+            Write-Error "ALFASTEC.exe tidak ditemukan setelah instalasi: $installedApp"
+            exit 1
+          }
+          $installedRenderer = Join-Path $installDir "resources\\renderer\\index.html"
+          if (-not (Test-Path $installedRenderer)) {
+            Write-Error "Renderer tidak ikut terpasang: $installedRenderer"
+            exit 1
+          }
+          $p = Start-Process -FilePath $installedApp -PassThru
+          Start-Sleep -Seconds 12
+          if ($p.HasExited) {
+            Write-Error "ALFASTEC berhenti setelah instalasi. ExitCode=$($p.ExitCode)"
+            exit 1
+          }
+          Write-Host "INSTALLATION STARTUP TEST: PASS"
+          Write-Host "Installed app: $installedApp"
+          Write-Host "Installed renderer: $installedRenderer"
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+
       - name: Unggah installer sebagai artifact
         uses: actions/upload-artifact@v4
         with:
