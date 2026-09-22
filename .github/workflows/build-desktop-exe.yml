@@ -40,6 +40,26 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.ALFASTEC_WIN_CERT_PASSWORD }}
         run: npm run build
 
+      - name: Audit isi paket Electron
+        run: node tools/verify-packaged-app.js
+
+      - name: Smoke test aplikasi hasil packaging
+        shell: pwsh
+        run: |
+          $app = Join-Path $PWD "dist\win-unpacked\ALFASTEC.exe"
+          if (-not (Test-Path $app)) {
+            Write-Error "Executable hasil unpacked tidak ditemukan: $app"
+            exit 1
+          }
+          $p = Start-Process -FilePath $app -PassThru
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) {
+            Write-Error "ALFASTEC berhenti sendiri saat startup packaging test. ExitCode=$($p.ExitCode)"
+            exit 1
+          }
+          Write-Host "ALFASTEC tetap berjalan setelah 10 detik startup test."
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+
       - name: Pastikan installer benar-benar dihasilkan
         shell: pwsh
         run: |
