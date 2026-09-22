@@ -25,9 +25,12 @@ try {
   fail('Renderer hasil build tidak dapat dibaca: ' + e.message);
 }
 
-const packagedPreload = path.join(asar, 'src', 'preload.js');
-if (!fs.existsSync(packagedPreload)) {
-  fail('Preload tidak tersedia pada app.asar: ' + packagedPreload);
+const preloadCandidates = [
+  path.join(asar, 'src', 'preload.js'),
+  path.join(asar, 'preload.js')
+];
+if (!preloadCandidates.some(p => fs.existsSync(p))) {
+  fail('Preload tidak tersedia pada app.asar. Dicari di: ' + preloadCandidates.join(' | '));
 }
 
 const icon = path.join(process.cwd(), 'build', 'icon.ico');
