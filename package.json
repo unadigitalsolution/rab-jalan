@@ -72,6 +72,10 @@
       {
         "from": "src/renderer",
         "to": "renderer"
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "build/icon.ico"
       }
     ]
   }
