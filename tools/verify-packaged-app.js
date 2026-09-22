@@ -25,9 +25,10 @@ try {
   fail('Renderer hasil build tidak dapat dibaca: ' + e.message);
 }
 
-const icon = path.join(process.cwd(), 'build', 'icon.ico');
-if (fs.existsSync(icon) && !fs.existsSync(path.join(asar, 'build', 'icon.ico'))) {
-  fail('build/icon.ico tersedia di source tetapi tidak masuk ke app.asar.');
+const sourceIcon = path.join(process.cwd(), 'build', 'icon.ico');
+const packagedIcon = path.join(resources, 'build', 'icon.ico');
+if (fs.existsSync(sourceIcon) && !fs.existsSync(packagedIcon)) {
+  fail('Icon hasil build tidak tersedia pada resources/build/icon.ico.');
 }
 
 console.log('[PACKAGE-VERIFY] OK');
