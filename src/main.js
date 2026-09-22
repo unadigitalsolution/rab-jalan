@@ -830,9 +830,13 @@ function createWindow() {
   // sekali dan cuma bikin bingung pengguna non-teknis.
   Menu.setApplicationMenu(null);
 
-  const rendererPath = path.join(__dirname, 'renderer', 'index.html');
+  const packagedRendererPath = path.join(process.resourcesPath, 'renderer', 'index.html');
+  const asarRendererPath = path.join(__dirname, 'renderer', 'index.html');
+  const rendererPath = app.isPackaged && fs.existsSync(packagedRendererPath)
+    ? packagedRendererPath
+    : asarRendererPath;
   if (!fs.existsSync(rendererPath)) {
-    throw new Error('File renderer tidak ditemukan: ' + rendererPath);
+    throw new Error('File renderer tidak ditemukan. Dicari di: ' + packagedRendererPath + ' dan ' + asarRendererPath);
   }
 
   mainWindow = new BrowserWindow({
